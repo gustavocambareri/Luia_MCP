@@ -1,0 +1,977 @@
+{
+  "nodes": [
+    {
+      "id": "_team/convictions",
+      "name": "Team Design Convictions",
+      "slug": "convictions",
+      "scope": "team",
+      "author": "team",
+      "tags": [
+        "team",
+        "convictions",
+        "principles"
+      ],
+      "created": "Wed Mar 25 2026 01:00:00 GM",
+      "fileSize": 2536,
+      "description": "The team's non-negotiable design principles — from Figma-as-blueprint to accessibility-first, tokens as contracts, and no placeholders ever.",
+      "body": "# Team Design Convictions\n\nOur non-negotiable design principles. These guide every decision — in Figma, in code, in how we use Claude.\n\n---\n\n## Figma is a blueprint, not a deliverable\n\nEvery static frame is a brief for its living counterpart. If a Figma comp does not imply how it moves, it is incomplete. Motion annotations with actual spring constants, ARIA roles, and state descriptions sit in separate annotation frames beside the design — never inside it.\n\n## We never build from scratch what the system already provides\n\nThe atomic hierarchy — fundamentals -> components -> blocks -> templates — governs every file. `figma_instantiate_component` is the primary build method. If you find yourself recreating a button or card from raw frames and text nodes, something has gone wrong.\n\nSee: [[design-system-patterns]]\n\n## A design with placeholders is not a design\n\nNo gray boxes, no Lorem ipsum, no generic icons. Real images, real text copied from the source. We cannot judge hierarchy, visual weight, or emotional tone with placeholders.\n\n## Design tokens are the contract between design and development\n\nWe do not guess at colors or round spacing values. If the design says `#216D6A` and 20px padding, the code says `#216D6A` and 20px padding. Every token flows from Figma to CSS custom properties with exact values.\n\nSee: [[design-system-patterns]]\n\n## Mobile is not a smaller desktop\n\nIt is a different medium — touch, scroll, limited attention, one-handed use. We classify each desktop section as Mode A (simple reflow) or Mode B (pattern rethink). Reflowing is the easy path; rethinking is where the design value lives.\n\n## Accessibility is a design constraint, not a development task\n\nWe choose patterns partly based on how well they support keyboard and screen reader use. If we cannot describe the ARIA roles and focus management for an interaction, it is not ready to build.\n\n## Animation is part of the design system\n\nEvery motion answers: what changed and why? We pick the animation tool that matches the interaction model. `prefers-reduced-motion` fallback is non-negotiable.\n\n## The screenshot is the source of truth\n\nWe extract programmatically via MCP, translate to our stack's conventions, and validate with screenshots. Visual validation is mandatory, with up to 3 iterations.\n\n## Duplication is a design system failure\n\nIf a block exists, it gets reused. Every project should have a block reuse matrix mapping blocks across templates.",
+      "sections": [
+        "Team Design Convictions",
+        "Figma is a blueprint, not a deliverable",
+        "We never build from scratch what the system already provides",
+        "A design with placeholders is not a design",
+        "Design tokens are the contract between design and development",
+        "Mobile is not a smaller desktop",
+        "Accessibility is a design constraint, not a development task",
+        "Animation is part of the design system",
+        "The screenshot is the source of truth",
+        "Duplication is a design system failure"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "_team/workflows"
+      ]
+    },
+    {
+      "id": "_team/design-system-patterns",
+      "name": "Design System Patterns",
+      "slug": "design-system-patterns",
+      "scope": "team",
+      "author": "team",
+      "tags": [
+        "team",
+        "design-system",
+        "tokens",
+        "patterns"
+      ],
+      "created": "Wed Mar 25 2026 01:00:00 GM",
+      "fileSize": 2734,
+      "description": "Shared atomic hierarchy, auto-layout rules, typography scaling, spacing system, and Gestalt principles used across all projects.",
+      "body": "# Design System Patterns\n\nShared patterns for building and maintaining design systems across projects.\n\n---\n\n## Atomic Hierarchy\n\n```\nFundamentals (colors, type, spacing, icons)\n  -> Components (button, card, input, tag)\n    -> Blocks (hero, carousel section, FAQ accordion, contact CTA)\n      -> Templates (page layouts assembled from blocks)\n```\n\nSee: [[convictions]] — \"We never build from scratch what the system already provides\"\n\n## Auto-Layout Rules\n\n- Always use auto-layout. No absolute positioning unless overlapping elements require it.\n- `layoutSizingHorizontal = \"FILL\"` on all content containers.\n- Set exact values for all properties — never use defaults.\n- Name every layer semantically: PascalCase for components (`CarouselTrack`), kebab-case with `--modifier` for states (`AccordionItem--expanded`).\n\n## Typography Scaling (Desktop -> Mobile)\n\n| Level | Desktop | Mobile | Rules |\n|-------|---------|--------|-------|\n| Headlines | Source size | 60-70% of desktop, min 24px | Line-height 1.15-1.2. Tighten letter-spacing for large display type |\n| Subheads | Source size | 65-75%, min 18px | |\n| Body | Source size | 15-17px, never below 14px | Line-height 1.4-1.55 |\n| Captions | Source size | 12-13px | Line-height 1.3-1.4 |\n\n## Spacing System\n\n| Context | Desktop | Mobile | Rule |\n|---------|---------|--------|------|\n| Horizontal padding | Project-specific | 20-24px edge inset | Non-negotiable mobile minimum |\n| Touch targets | N/A | Min 44px height | Non-negotiable |\n| Section gaps | Project-specific | Compress proportionally | Ratio between gaps matters more than absolute values |\n\n## Gestalt Principles\n\n- **Proximity**: Tighten related groups further on mobile. Increase separation between unrelated groups.\n- **Similarity**: Identical styling for elements serving the same function.\n- **Continuity**: Vertical flow must feel unbroken. Align left edges strictly.\n- **Optical centering**: Shift ~2-4% upward from mathematical center for perceived balance.\n\n## Web Implementation Patterns\n\n| Pattern | Lightweight | Rich |\n|---------|------------|------|\n| Carousel | CSS `scroll-snap-type: x mandatory` | Framer Motion `drag=\"x\"` or Embla Carousel |\n| Accordion | `<details>/<summary>` (zero JS) | Framer Motion `AnimatePresence` + `layout` |\n| Tabs | `tablist/tab/tabpanel` roles + CSS | Framer Motion `layoutId` for indicator |\n| Images | `next/image` with `sizes`, `placeholder=\"blur\"`, `loading=\"lazy\"` | — |\n\n## Project Token Catalogs\n\nProject-specific tokens live in their respective folders:\n- [[museon]] — `projects/museon/`\n- [[pulse]] — `projects/pulse/`\n- [[solara]] — `projects/solara/`",
+      "sections": [
+        "Design System Patterns",
+        "Atomic Hierarchy",
+        "Auto-Layout Rules",
+        "Typography Scaling (Desktop -> Mobile)",
+        "Spacing System",
+        "Gestalt Principles",
+        "Web Implementation Patterns",
+        "Project Token Catalogs"
+      ],
+      "connections": [
+        "_team/convictions"
+      ]
+    },
+    {
+      "id": "_team/workflows",
+      "name": "Team Workflows",
+      "slug": "workflows",
+      "scope": "team",
+      "author": "team",
+      "tags": [
+        "team",
+        "workflows",
+        "mcp",
+        "figma"
+      ],
+      "created": "Wed Mar 25 2026 01:00:00 GM",
+      "fileSize": 4282,
+      "description": "Step-by-step workflows for building in Figma with MCP, extracting designs to code, visual validation loops, and desktop-to-mobile translation.",
+      "body": "# Team Workflows\n\nStandard workflows for using Claude + Figma Console MCP across projects.\n\n---\n\n## Figma Console MCP — The Primary Tool\n\nFigma Console MCP is the primary tool for **both** building in Figma and extracting designs for web implementation. It gives direct access to the Figma plugin API — exact computed values, image hashes, every property — which is more precise than the Figma API MCP.\n\n### Building inside Figma (everyone)\n\nThe core workflow for the whole team — designing, exploring, and building components and pages in Figma.\n\n| Step | Tool | Purpose |\n|------|------|---------|\n| 1 | `figma_search_components` | Know what exists before building (run at session start) |\n| 2 | `figma_get_selection` | Get selected node structure — layout, hierarchy, properties |\n| 3 | `figma_take_screenshot` | Visual reference — the source of truth |\n| 4 | `figma_get_component_details` | Inspect component properties, variants, states |\n| 5 | `figma_get_styles` | Extract exact colors, typography, spacing tokens |\n| 6 | `figma_instantiate_component` | Build with existing components — primary method |\n| 7 | `figma_clone_node` / `figma_set_image_fill` | Transfer real images |\n| 8 | `figma_execute` | Custom operations, complex builds, batch variable creation |\n| 9 | `figma_take_screenshot` | Validate, iterate up to 3x |\n\nSee: [[convictions]] — \"We never build from scratch what the system already provides\"\n\n### Extracting for web implementation\n\nWorkflow for translating Figma designs to code. Uses the same Console MCP tools for reading, plus the API MCP for quick URL-based extraction.\n\n| Step | Tool | Purpose |\n|------|------|---------|\n| 1 | `figma_get_selection` + `figma_take_screenshot` | Understand the design visually and structurally |\n| 2 | `figma_get_component_details` + `figma_get_styles` | Extract exact tokens, props, variants |\n| 3 | `figma_execute` | Custom extraction — image hashes, computed values, anything the plugin API exposes |\n| 4 | Translate to project conventions | Map tokens to CSS custom properties, reuse existing code components |\n| 5 | Validate against screenshot | Layout, typography, colors, states, accessibility |\n\n### Figma API MCP (secondary)\n\nThe Figma API MCP (`get_design_context`, `get_screenshot`, `get_metadata`) is useful when:\n- Figma Desktop is not open (works via URL only)\n- You need a quick one-shot extraction from a shared link\n- You want Code Connect mappings between Figma components and codebase files\n\n**Key insight:** Extracting Figma **components** (not raw frames) via `get_design_context` produces richer output — typed as `COMPONENT`/`INSTANCE`, exposes props/variants.\n\n## Figma Build Order (for `figma_execute`)\n\n1. Create the node (frame, text, rectangle)\n2. For text: set `fontName` BEFORE `characters`\n3. Load ALL fonts with `figma.loadFontAsync()` at start — including `Inter Regular` (Figma default)\n4. Append node to parent BEFORE setting `layoutSizingHorizontal = \"FILL\"` (requires auto-layout parent)\n5. For hug-content containers: set `primaryAxisSizingMode = \"AUTO\"` AFTER appending children\n\n## Visual Validation Loop\n\nAfter creating or modifying ANY visual elements:\n1. **CREATE**: Execute design code via `figma_execute`\n2. **SCREENSHOT**: Capture result with `figma_take_screenshot`\n3. **ANALYZE**: Check alignment, spacing, proportions, visual balance\n4. **ITERATE**: Fix issues and repeat (max 3 iterations)\n5. **VERIFY**: Final screenshot to confirm\n\n## Desktop-to-Mobile Translation\n\n1. **Analyze** — `figma_get_selection` + `figma_take_screenshot` + `figma_get_component_details` + `figma_get_styles`\n2. **Classify each section** as Mode A (simple reflow) or Mode B (pattern rethink)\n3. **Mode A** — Build reflow directly, no approval needed\n4. **Mode B** — Present pattern proposals with motion specs, wait for approval\n5. **Build** — 375px frame, auto-layout, component-first, real images, exact tokens\n6. **Annotate** — Motion/interaction specs in separate frame beside the design (40px gap)\n7. **Validate** — Screenshot, analyze, fix, re-screenshot (up to 3 iterations)\n\n## Divergent Exploration\n\nSee: [[diverge]] — full skill for generating 3 design directions as Figma frames.",
+      "sections": [
+        "Team Workflows",
+        "Figma Console MCP — The Primary Tool",
+        "Building inside Figma (everyone)",
+        "Extracting for web implementation",
+        "Figma API MCP (secondary)",
+        "Figma Build Order (for `figma_execute`)",
+        "Visual Validation Loop",
+        "Desktop-to-Mobile Translation",
+        "Divergent Exploration"
+      ],
+      "connections": [
+        "_team/convictions"
+      ]
+    },
+    {
+      "id": "projects/museon/mobile-ux-patterns",
+      "name": "Mobile UX Pattern Advisor",
+      "slug": "mobile-ux-patterns",
+      "scope": "project",
+      "project": "museon",
+      "author": "team",
+      "tags": [],
+      "fileSize": 16695,
+      "description": "Analyzes desktop design blocks and proposes mobile interaction patterns — carousels, accordions, gestures — then builds them in Figma.",
+      "body": "# Mobile UX Pattern Advisor\n\n  \n\nYou are a senior UX designer and front-end architect. You combine deep interaction design knowledge with practical web development experience — you know what works beautifully on mobile AND what ships cleanly in HTML/CSS/JS.\n\n  \n\nYour task: analyze the selected desktop design block(s), identify UX opportunities for mobile, propose interaction patterns, and — once the user approves a direction — build it in Figma using the Figma Console MCP.\n\n  \n\nThis skill is NOT a pixel-for-pixel translator. It is a **design thinker** that reimagines how content should behave on a small, touch-driven, scroll-driven screen — while staying faithful to the visual identity.\n\n  \n\n---\n\n  \n\n## STACK CONTEXT\n\n  \n\nThe user works in a pipeline: **Figma → Next.js (React)**.\n\n  \n\n- **Design system**: Atomic design — fundamentals → components → blocks → templates.\n\n- **Frontend**: Next.js with React for CSS, Framer Motion for animation.\n\n- **Tooling**: Claude Code with Pierre, Figma MCP for implementation, Figma Console MCP for extraction from Figma, Blender MCP.\n\n- **Key insight**: Figma is static, but the final product is not. When proposing patterns, think beyond what Figma can show — describe the **motion, timing, and interaction states** that will come alive in code. Design in Figma as a blueprint for a living interface, not as a final artifact.\n\n  \n\nWhen annotating designs, include Framer Motion thinking: what animates, how, and when. This bridges the gap between the static Figma comp and the dynamic Next.js implementation.\n\n  \n\n---\n\n  \n\n## WORKFLOW\n\n  \n\n### Phase 1 — Deep Analysis\n\n  \n\n1. **Get the current selection** via `figma_get_selection`.\n\n2. **Take a screenshot** via `figma_take_screenshot` to see the full composition.\n\n3. **Inspect thoroughly** via `figma_get_component_details` and `figma_get_styles`:\n\n- Map every element: text, images, icons, buttons, links, containers.\n\n- Identify the **content type** of each section (see Content Pattern Library below).\n\n- Note data density: how many items? How repetitive? How much text per item?\n\n- Identify interactive elements vs. static content.\n\n- Extract all visual tokens (colors, type, spacing, radii) for later use.\n\n- Identify which elements are **fundamentals**, **components**, or **blocks** in the atomic hierarchy — this affects how the mobile pattern should decompose.\n\n4. **Search for components** via `figma_search_components` to understand the design system and reuse existing atoms.\n\n  \n\n### Phase 2 — UX Pattern Mapping\n\n  \n\nFor each section/block in the selection, classify its **content archetype** and evaluate which mobile interaction patterns fit. Consider:\n\n  \n\n#### Content Archetypes → Pattern Candidates\n\n  \n\n| Content Type | Desktop Appearance | Mobile Pattern Options |\n\n|---|---|---|\n\n| **Item collection** (events, products, articles, cards) | Grid of 3-4+ cards | **Horizontal carousel** (peek next item to invite swipe), **Vertical stack** (if ≤3 items), **2-col compact grid** (if items are image-heavy and small) |\n\n| **Feature list** (services, benefits, steps) | Multi-column icons + text | **Vertical accordion** (if descriptions are long), **Swipeable cards** (if visual), **Simple stack** (if concise) |\n\n| **Navigation / categories** | Horizontal row or mega-menu | **Scrollable pill tabs**, **Bottom sheet with categories**, **Segmented control** (if ≤4 items) |\n\n| **Hero / banner** | Full-width with text overlay | **Stacked: image then text** (safer for readability), **Compact hero** (shorter image, overlapping text card) |\n\n| **Testimonials / quotes** | Side-by-side or grid | **Carousel with dots/pagination**, **Single featured + \"see more\"** |\n\n| **Stats / numbers** | Horizontal row | **2x2 grid**, **Horizontal scroll**, **Single stat highlight + expandable** |\n\n| **Long-form text** | Wide paragraphs | **Progressive disclosure** (show first paragraph + \"Read more\"), **Accordion sections** if content has natural divisions |\n\n| **Media gallery** | Grid of images | **Full-width carousel with counter**, **Masonry 2-col** (if varied aspect ratios), **Horizontal filmstrip** |\n\n| **Form / input** | Wide multi-column form | **Single-column stepped form**, **Floating labels**, **Bottom-anchored CTA** |\n\n| **Tab content** | Horizontal tabs with content panels | **Sticky tabs** (remain visible on scroll), **Swipeable tab content** |\n\n| **Map + list** | Side-by-side | **Toggle view** (map/list switch), **Bottom sheet over map** |\n\n| **Timeline / process** | Horizontal steps | **Vertical timeline**, **Stepper with current step focus** |\n\n| **Pricing / comparison** | Table or side-by-side columns | **Swipeable cards** (one plan per card), **Toggle between plans**, **Accordion per plan** |\n\n  \n\n#### Interaction Considerations\n\n  \n\nFor each pattern you propose, evaluate:\n\n  \n\n- **Thumb reachability**: Is the primary action in the bottom 2/3 of the screen? If not, can we restructure?\n\n- **Scroll depth**: Will the user have to scroll excessively? If",
+      "sections": [
+        "Mobile UX Pattern Advisor",
+        "STACK CONTEXT",
+        "WORKFLOW",
+        "Phase 1 — Deep Analysis",
+        "Phase 2 — UX Pattern Mapping",
+        "Phase 3 — Present Proposals",
+        "[Section Name]",
+        "Phase 4 — Build in Figma",
+        "Phase 5 — Visual Validation (MANDATORY)",
+        "Phase 6 — Report",
+        "DESIGN PRINCIPLES",
+        "TYPOGRAPHY & SPACING",
+        "RULES",
+        "ASKING FOR INPUT"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/museon/collection-editorial-hybrid-redesign",
+      "name": "Mobile Collection Block — Editorial Hybrid Redesign",
+      "slug": "collection-editorial-hybrid-redesign",
+      "scope": "project",
+      "project": "museon",
+      "author": "team",
+      "tags": [],
+      "fileSize": 4431,
+      "description": "Redesigns the Museon collection block from a flat carousel into an editorial hybrid layout that preserves the art-catalogue feel on mobile.",
+      "body": "# Mobile Collection Block — Editorial Hybrid Redesign\n\n## Context\n\nThe desktop \"View our highlights\" collection block has a striking editorial layout: three artworks at different sizes, asymmetrically placed — like an art catalogue spread. The current mobile version flattens this into a generic equal-width horizontal carousel, losing the editorial character.\n\n**Goal**: Redesign as a **hybrid layout** — one large hero artwork on top, followed by a peek-style carousel for the remaining pieces. Then implement in Next.js/React code.\n\n---\n\n## Phase A — Build in Figma\n\n### Steps\n\n1. **Create Section** on current page: `Mobile UX — Collection Editorial Hybrid`\n2. **Build mobile frame** (375px wide, auto-layout vertical, bg `#216D6A`, padding 20px horizontal / 60px vertical, 80px gap between major sections)\n3. **Title block** — \"View our highlights\" at 40px Display Sans `#FFE176`, ornament below\n4. **Hero artwork** — Full-width image container (fills parent width). Use the landscape painting. Below it: title + artist in `#FFE176`\n5. **Carousel section** — Horizontal auto-layout, overflow hidden:\n   - Card 1: ~280px wide (Guest Architect illustration)\n   - Card 2: ~20% peeking (third artwork)\n   - 16px gap between cards\n6. **Pagination row** — \"2 / 3\" counter + dot indicators\n7. **Info section** — Body text + \"View collection\" CTA with arrow\n8. **Decorative ornaments** — Scatter between sections\n9. **Annotation frame** beside the design with motion specs + component mapping\n10. **Screenshot & validate** — Check hierarchy, peek visibility, proportions. Iterate up to 3x.\n\n### Visual tokens\n- Background: `#216D6A`\n- Title: `#FFE176`, Display Sans Regular 40px, lh 1.1, tracking -0.8px\n- Body/labels: `#FFE176`, Display Sans Regular 16px, lh 1.4\n- Artist: `#FFE176`, Display Sans Regular 12px, lh 1.4\n- Accent: `#A6E3E6`\n- Padding: 20px horizontal, 60px vertical\n- Gaps: 80px between sections, 20px image-to-text\n\n### Key Figma nodes\n- Current mobile: `6177:3097`\n- Desktop: `6099:2869`\n- Component set: `6099:2881`\n- Decoration: Contemporary Artist ornament variants\n- CTA pattern: `6176:3091`\n- DotsGroup: `6176:3085`\n\n---\n\n## Phase B — Implement in Code (Next.js / React)\n\n### Component structure\n\n```\nCollectionSectionBlock (mobile variant)\n├── Title (\"View our highlights\")\n├── Decoration (ornament)\n├── HeroArtwork\n│   ├── Image (next/image, full-width, natural aspect ratio)\n│   └── Details (title + artist)\n├── CarouselSection\n│   ├── CarouselTrack (horizontal scroll-snap)\n│   │   ├── CarouselCard (remaining item 1)\n│   │   └── CarouselCard (remaining item 2, peeking)\n│   └── PaginationRow (counter + dots)\n├── InfoSection\n│   ├── BodyText\n│   └── CTAButton (\"View collection\" →)\n└── Decoration (ornament)\n```\n\n### Implementation approach\n\n- **Hero**: `next/image` with `sizes=\"100vw\"`, `placeholder=\"blur\"`, fills container width, natural aspect ratio\n- **Carousel**: CSS `scroll-snap-type: x mandatory` + `overflow-x: auto` on the track. Cards with `scroll-snap-align: start`. Peek achieved by making track wider than viewport with right padding.\n- **Pagination**: Intersection Observer on carousel cards to update active index + counter text\n- **Styling**: React CSS (styled-jsx or CSS modules, matching project conventions)\n- **Motion (Framer Motion)**:\n  - Hero: `whileInView` fade-up, `y: [30,0]`, `opacity: [0,1]`, `duration: 0.6`\n  - Hero text: 0.1s delay after image\n  - Carousel cards: slide in from right on first view, `x: [60,0]`\n  - Card swipe: spring snap (`stiffness: 300, damping: 30`)\n  - Ornaments: gentle scroll-driven rotation\n  - `prefers-reduced-motion`: all visible, no animation\n\n### Files to create/modify\n- Determine from existing codebase — search for existing collection block component and mobile variant patterns\n\n---\n\n## Verification\n\n### Figma\n1. Screenshot confirms hero is clearly larger/dominant\n2. Carousel shows peek of next card\n3. All real images, no placeholders\n4. Annotations beside (not overlapping) the design\n5. All layers named semantically (PascalCase)\n\n### Code\n1. Component renders correctly at 375px viewport\n2. Carousel scrolls horizontally with snap\n3. Peek visible on next card\n4. Hero image loads with proper sizing\n5. Framer Motion animations fire on scroll\n6. CTA touch target ≥ 44px\n7. `prefers-reduced-motion` respected",
+      "sections": [
+        "Mobile Collection Block — Editorial Hybrid Redesign",
+        "Context",
+        "Phase A — Build in Figma",
+        "Steps",
+        "Visual tokens",
+        "Key Figma nodes",
+        "Phase B — Implement in Code (Next.js / React)",
+        "Component structure",
+        "Implementation approach",
+        "Files to create/modify",
+        "Verification",
+        "Figma",
+        "Code"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/museon/desktop-to-mobile",
+      "name": "Desktop to Mobile — Unified Translation",
+      "slug": "desktop-to-mobile",
+      "scope": "project",
+      "project": "museon",
+      "author": "team",
+      "tags": [],
+      "fileSize": 20955,
+      "description": "Translates desktop Figma designs into mobile-optimized versions — classifying sections as simple reflow or pattern rethink, then building with exact tokens.",
+      "body": "# Desktop to Mobile — Unified Translation\n\nYou are a world-class visual designer and front-end architect with deep knowledge of Gestalt principles, optical correction, and mobile interaction patterns — in the tradition of Max Bill's systematic precision and visual clarity.\n\nYour task: translate the desktop design blocks I provide into mobile-optimized versions inside Figma, using the Figma Console MCP. Depending on the content, you will either **faithfully reflow** the layout or **propose a new interaction pattern** — you decide which approach fits, section by section.\n\n---\n\n## STACK CONTEXT\n\nThe user works in a pipeline: **Figma → Next.js (React)**.\n\n- **Design system**: Atomic design — fundamentals → components → blocks → templates.\n- **Frontend**: Next.js with React for CSS, Framer Motion for animation.\n- **Tooling**: Claude Code with Pierre, Figma MCP for implementation, Figma Console MCP for extraction from Figma, Blender MCP.\n- **Key insight**: Figma is static, but the final product is not. When proposing patterns, think beyond what Figma can show — describe the **motion, timing, and interaction states** that will come alive in code. Design in Figma as a blueprint for a living interface, not as a final artifact.\n\n---\n\n## WORKFLOW\n\n### Phase 1 — Analyze the Input\n\n1. **Get the current selection** via `figma_get_selection`.\n2. **Take a screenshot** via `figma_take_screenshot` to see the full composition.\n3. **Inspect thoroughly** via `figma_get_component_details` and `figma_get_styles`:\n   - Extract every color, typeface, font size, weight, line-height, letter-spacing.\n   - Extract every spacing value (padding, margin, gap).\n   - Extract corner radii, stroke weights, opacity values.\n   - Identify all components, instances, auto-layout settings, and constraints.\n   - Note the visual hierarchy: what leads the eye, what is primary/secondary/tertiary.\n   - Identify which elements are **fundamentals**, **components**, or **blocks** in the atomic hierarchy.\n   - Note data density: how many items? How repetitive? How much text per item?\n   - Identify interactive elements vs. static content.\n4. **Search for components** via `figma_search_components` to understand the design system and reuse existing atoms.\n\n### Phase 2 — Classify Each Section\n\nFor each section/block in the selection, determine the **translation mode**:\n\n#### Mode A — Simple Reflow\n\nUse when the content adapts naturally to a single column without losing meaning or usability. Typical candidates:\n- Hero / banner (image + headline + CTA)\n- Text sections (heading + paragraphs)\n- Single feature highlight (image + text side-by-side → stacked)\n- Simple navigation (≤5 items)\n- Contact / footer blocks\n- Any section with ≤3 items that can stack vertically without excessive scroll depth\n\n**Action**: Apply reflow directly using the design rules below. No approval needed — just build.\n\n#### Mode B — Pattern Rethink\n\nUse when a simple reflow would create problems — excessive scroll depth, lost context, broken relationships between items, or missed interaction opportunities. Typical candidates:\n- Item collections (grids of 4+ cards — events, products, articles)\n- Feature lists (multi-column icons + descriptions)\n- Media galleries (image grids)\n- Comparison tables / pricing\n- Tab content / segmented views\n- Timelines / multi-step processes\n- Stats / number rows (4+ items)\n- Any section where vertical stacking creates a wall of repetitive content\n\n**Action**: Propose pattern options, wait for approval, then build.\n\nPresent Mode B sections to the user:\n\n```\n### [Section Name]\n\n**Content type**: [archetype]\n**Atomic level**: [fundamental / component / block]\n**Desktop**: [brief description of current layout]\n**Items/data points**: [count and nature]\n**Why reflow won't work**: [specific problem — scroll depth, lost comparison ability, etc.]\n\n**Recommended pattern**: [Pattern A]\n- Why: [UX rationale]\n- Motion: [Framer Motion behavior — enter, interact, exit]\n- Implementation: [Next.js/React approach, complexity level]\n\n**Alternative**: [Pattern B]\n- Why: [when this would be better instead]\n\n**What stays the same**: [visual identity elements preserved]\n**What becomes possible**: [motion, gesture, state — things code enables beyond static]\n```\n\nAfter presenting Mode B proposals, **ask the user which direction to take**. Proceed with Mode A sections immediately while waiting.\n\n#### Content Archetypes → Pattern Candidates (Mode B Reference)\n\n| Content Type | Desktop Appearance | Mobile Pattern Options |\n|---|---|---|\n| **Item collection** (events, products, articles, cards) | Grid of 3-4+ cards | **Horizontal carousel** (peek next item to invite swipe), **Vertical stack** (if ≤3 items), **2-col compact grid** (if image-heavy and small) |\n| **Feature list** (services, benefits, steps) | Multi-column icons + text | **Vertical accordion** (if descriptions are long), **Swipeable cards** (if visual), **Simple stack** (if concise) |\n| **Navigation / categories** | Horizontal ",
+      "sections": [
+        "Desktop to Mobile — Unified Translation",
+        "STACK CONTEXT",
+        "WORKFLOW",
+        "Phase 1 — Analyze the Input",
+        "Phase 2 — Classify Each Section",
+        "[Section Name]",
+        "DESIGN RULES (Applied to Both Modes)",
+        "Mobile Canvas",
+        "Typography Scale — Optical Rules",
+        "Spacing System — Proportional Compression",
+        "Layout Transformation (Mode A)",
+        "Gestalt Principles — Applied",
+        "Visual Weight & Optical Balance",
+        "INTERACTION & MOTION (Mode B Patterns)",
+        "Interaction Considerations",
+        "Motion Design (Framer Motion Lens)",
+        "Web Implementation Notes",
+        "BUILDING IN FIGMA (Both Modes)",
+        "Phase 3 — Build",
+        "Build Order for `figma_execute`",
+        "Phase 4 — Visual Validation (MANDATORY)",
+        "Phase 5 — Report",
+        "DESIGN PRINCIPLES",
+        "RULES — NON-NEGOTIABLE",
+        "ASKING FOR INPUT"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/museon/ux-architecture",
+      "name": "Museon — UX Architecture & Component Map",
+      "slug": "ux-architecture",
+      "scope": "project",
+      "project": "museon",
+      "author": "team",
+      "tags": [],
+      "fileSize": 14431,
+      "description": "Full component map and UX architecture of the Museon website — extracted from Figma, documenting every block, template, and design token.",
+      "body": "# Museon — UX Architecture & Component Map\n\n> Extracted from Figma files on 2026-03-24.\n> Design file: `xK7mPqR2vN5tYw8bJcL3dE` (DesignHub)\n> Components file: `aB3cD4eF5gH6iJ7kL8mN9o` (Fundamentals & Components - Museon)\n\n---\n\n## Sources of Truth\n\n| Source | File Key | What it contains |\n|--------|----------|-----------------|\n| **DesignHub — Design** | `xK7mPqR2vN5tYw8bJcL3dE` node `0:1` | All page designs, states, viewport annotations |\n| **DesignHub — Sitemap** | `xK7mPqR2vN5tYw8bJcL3dE` node `1:42850` | Full sitemap with page purposes, block assignments |\n| **Fundamentals & Components — Blocks** | `aB3cD4eF5gH6iJ7kL8mN9o` node `2001:7` | Reusable block components |\n| **Fundamentals & Components — Footer** | `aB3cD4eF5gH6iJ7kL8mN9o` node `2001:8` | Footer + partner carousel |\n| **Pierre skills** | `/Documents/Pierre/` | Design convictions, workflows, patterns from past projects |\n\n---\n\n## Site Structure (from Sitemap)\n\n### Primary Navigation\n- **See & Do** (See & Do)\n- **Visit & Tickets** (Visit & Tickets)\n- **Collection & Stories** (Collection & Stories)\n- **Over Museon** (About)\n- **Meta**: Tickets CTA, Language (NL/EN), Search\n\n### Page Tree\n\n```\nHome\n├── See & Do (primary — flyout nav)\n│   ├── Exhibitions & Activities (Exhibitions overview)\n│   │   ├── Exhibition detail page (Exhibition detail)\n│   │   └── Activity detail page (Activity detail)\n│   ├── Agenda (calendar view)\n│   └── Past exhibitions (past exhibitions)\n│\n├── Visit & Tickets (primary — flyout nav)\n│   ├── Tickets, toegangsprijzen, adres & openingstijden\n│   ├── House rules & FAQ\n│   ├── Accessibility (Accessibility)\n│   ├── Families & children\n│   ├── Groups & Schools\n│   │   ├── Studenten\n│   │   └── Groups & Schools item pagina\n│   └── Museum shop & café\n│\n├── Collection & Stories (primary — flyout nav)\n│   ├── Collectie (Collection overview — dark theme)\n│   │   ├── Collectie item pagina (artwork detail)\n│   │   └── Artist item pagina (artist + works)\n│   ├── Gebouw (Building)\n│   └── Verhalen (Stories overview)\n│       └── Verhalen item pagina (story detail)\n│\n├── Over Museon (primary — flyout nav)\n│   ├── Organisation (overview)\n│   │   └── Organisation item pagina\n│   ├── Young Office\n│   ├── Support (Support)\n│   ├── News & Press (News overview)\n│   │   └── Pers item pagina (news detail)\n│   ├── Loans (Loans)\n│   └── Contact\n│\n├── Search (Search)\n└── Tickets (meta — external/overlay)\n```\n\n---\n\n## Page Templates\n\n### 1. Home\n- **Theme**: Yellow bg\n- **Blocks**: Hero (display font), Expo highlight, See & do highlights, Top tasks (\"See also\"), Large visual with CTA (\"Art in dialogue\"), Collection section (\"View our highlights\"), Footer\n- **States**: 10+ viewport scroll annotations in design file\n\n### 2. Exhibitions Overview\n- **Theme**: Yellow bg\n- **Blocks**: Anchor links (Currently showing / Permanent / Upcoming), Expo highlight (featured), Item grid (exhibition cards), Top tasks (\"See also\"), Footer\n\n### 3. Expo/Activity Detail\n- **Theme**: Per-exhibition color + display font variant (CMS-driven)\n- **Color examples**: Burgundy (`#AE3C4E`), Teal (`#216D6A`), Purple/olive\n- **Font variants**: Museon Block OR Museon Gothic per exhibition\n- **Blocks**: Hero (themed display title + image), Date block (display font), Title/text/media (long-form), Image block, Content fly outs (expandable `+` sections), \"Discover the museum together\" cross-sell, FAQ accordion, Top tasks (\"See also\"), Footer\n- **Key interaction**: Fly-out pattern — `+` button triggers inline content expansion (text or images)\n\n### 4. Collection Overview\n- **Theme**: Dark bg (near-black)\n- **Blocks**: Filter pills (categories), Item grid (artwork cards — masonry-ish 3-col), Pagination, Top tasks (\"See also\"), Footer\n\n### 5. Collection Item\n- **Theme**: Dark bg (top half) + white (bottom)\n- **Layout**: Split — large artwork image left, metadata panel right\n- **Blocks**: Expandable metadata sections (Het object, Vervaardiging — `+` toggles), \"Similar objects\" (similar items list), Footer\n\n### 6. Artist Detail\n- **Theme**: Dark bg (same as Collection)\n- **Layout**: Artist name + bio intro, then scoped collection grid (same Item grid component)\n- **Blocks**: Item grid, Pagination, Top tasks (\"See also\"), Footer\n\n### 7. News & Press Overview\n- **Theme**: Yellow bg\n- **Blocks**: 3-column card grid (News & press cards), Pagination, Top tasks (\"See also\"), Footer\n\n### 8. Info Page (reusable template)\n- **Theme**: Yellow bg\n- **Used for**: Groups & Schools, Accessibility, Families & Children, FAQ, Museumshop, Young Office, Support, Loans, Contact, Organisation pages\n- **Blocks**: Title + intro + CTAs, Top tasks grids (grouped by audience), Title/text/media (content + image), FAQ accordion, Large visual with CTA, Footer\n\n### 9. Agenda\n- **Theme**: Yellow bg\n- **Blocks**: Filter bar (type + date), Date picker, Agenda day list, Footer\n- **States**: Multiple filter states designed (type dropdown, date picker)\n\n### 10.",
+      "sections": [
+        "Museon — UX Architecture & Component Map",
+        "Sources of Truth",
+        "Site Structure (from Sitemap)",
+        "Primary Navigation",
+        "Page Tree",
+        "Page Templates",
+        "1. Home",
+        "2. Exhibitions Overview",
+        "3. Expo/Activity Detail",
+        "4. Collection Overview",
+        "5. Collection Item",
+        "6. Artist Detail",
+        "7. News & Press Overview",
+        "8. Info Page (reusable template)",
+        "9. Agenda",
+        "10. Search",
+        "11. Past Exhibitions",
+        "Global Elements",
+        "Nav Bar",
+        "Navigation Flyouts",
+        "Practical Overlay",
+        "Message Ticker",
+        "Footer",
+        "Atomic Component Inventory",
+        "Fundamentals (design tokens)",
+        "Components (UI primitives)",
+        "Navigation Components",
+        "Blocks (assembled from components)",
+        "Layout Components",
+        "Key UX Patterns",
+        "Fly-out Pattern",
+        "Per-Exhibition Theming",
+        "Color Theme Contexts",
+        "Scroll Behavior",
+        "Practical Overlay",
+        "Next.js Project Mapping",
+        "Reuse Matrix"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/pulse/design-system",
+      "name": "Design System Rules — Atelier × Pulse",
+      "slug": "design-system",
+      "scope": "project",
+      "project": "pulse",
+      "author": "team",
+      "tags": [],
+      "fileSize": 7306,
+      "description": "Complete design system rules for the Pulse website — colors, typography, spacing, grid, and component specifications extracted from Figma.",
+      "body": "# Design System Rules — Atelier × Pulse\nExtracted from Figma file \"Gus Pulse\" (Design for website / Design system pages).\n\n---\n\n## Colors\n\n| Token | Hex | Usage |\n|---|---|---|\n| `white` | `#ffffff` | Backgrounds, text on dark |\n| `light-grey` | `#fbfbfb` | Subtle backgrounds |\n| `mid-grey` | `#dadadb` | Borders, dividers, muted UI |\n| `dark-grey` | `#5a5a5a` | Secondary text |\n| `black` | `#1c1c1c` | Primary text, dark backgrounds |\n| `red-logo` | `#ec1d2c` | Logo mark only |\n| `red-text` | `#fc3c3c` | Accent text, highlights |\n| `accent-polarisatie` | `#e1dcce` | Campaign accent (warm sand) |\n| `accent-dood` | `#b7c3cd` | Campaign accent (steel blue) |\n| `accent-armoede` | `#d9d9d9` | Campaign accent (neutral grey) |\n\n> Conversion: Figma RGB floats → hex (multiply by 255, round).\n\n---\n\n## Typography\n\nSingle typeface family system built on **Primary Sans** (primary) and **Editorial Serif** (editorial/quote). All text is predominantly set in Primary Sans across five weights.\n\n### Fonts\n\n| Font | Role |\n|---|---|\n| `Primary Sans` | Primary — headlines, UI, body, labels |\n| `Primary Sans Breit` | Wide-tracked labels, section headers, dates |\n| `Editorial Serif` | Editorial quotes, pull-out text |\n\n### Type Scale\n\n| Size (px) | Font | Weight/Style | Line Height | Letter Spacing | Case | Usage |\n|---|---|---|---|---|---|---|\n| 222 | Primary Sans | Buch (Book) | 80% | 0% | UPPERCASE | Hero display |\n| 160 | Primary Sans | Extrafett (ExtraBold) | 80% | -2% | — | Stat numbers |\n| 160 | Primary Sans | Kräftig (Medium) | 80% | -2% | — | Stat numbers alt |\n| 160 | Primary Sans | Buch | 80% | -2% | UPPERCASE | Year display |\n| 84 | Primary Sans | Extrafett | 80% | 0% | UPPERCASE | Section headline |\n| 60 | Primary Sans | Extrafett | 80% | -2% | — | Large stat |\n| 60 | Primary Sans | Kräftig | 80% | -2% | — | Large stat alt |\n| 52 | Primary Sans Breit | Fett (Bold) | 90% | 0% | — | Section title |\n| 52 | Primary Sans | Buch | 100% | 0% | — | Section title light |\n| 52 | Primary Sans | Kräftig | 90% | 0% | — | Section title mid |\n| 52 | Primary Sans | Extrafett | 100% | 0% | — | Section title heavy |\n| 40 | Editorial Serif | Regular | 95% | +2% | — | Opening quote mark |\n| 32 | Primary Sans | Kräftig | 100% | 0% | — | Quote body |\n| 28 | Primary Sans | Extrafett | 100% | +2% | — | Sub-headline bold |\n| 28 | Primary Sans | Buch | 100% | +2% | — | Sub-headline light |\n| 28 | Primary Sans | Kräftig | 100% | -1% | — | Sub-headline mid |\n| 28 | Editorial Serif | Regular | 100% | -1% | — | Editorial body |\n| 28 | Editorial Serif | Book | 95% | -1% | — | Editorial quote |\n| 24 | Primary Sans | Kräftig | 100% | 0% | — | Card title |\n| 24 | Primary Sans | Buch | 100% | 0% | — | Card body |\n| 24 | Primary Sans | Extrafett | 100% | 0% | — | Tag / label bold |\n| 20 | Primary Sans | Buch | 100% | 0% | — | Body regular |\n| 20 | Primary Sans | Kräftig | 100% | 0% | — | Body medium |\n| 20 | Primary Sans Breit | Dreiviertelfett (DemiBold) | 100% | 0% | — | Wide label |\n| 18 | Primary Sans | Buch | 120% | -1% | — | Long-form body |\n| 18 | Primary Sans | Kräftig | 100% | 0% | — | Body medium small |\n| 18 | Primary Sans | Extrafett | 100% | -3% | — | Badge / winner |\n| 16 | Primary Sans | Buch | 100% | +2% | — | Small body / meta |\n| 16 | Primary Sans | Extrafett | 100% | -3% | — | Small label bold |\n| 16 | Primary Sans Breit | Dreiviertelfett | 100% | +2% | — | Wide small label |\n| 14 | Primary Sans | Kräftig | 100% | -1% | — | Caption medium |\n| 14 | Primary Sans | Buch | 100% | -1% | — | Caption light |\n| 12 | Primary Sans | Buch | 100% | -3% | — | Fine print |\n| 12 | Primary Sans | Extrafett | 100% | -1% | — | Micro stat bold |\n| 12 | Primary Sans | Kräftig | 100% | -1% | — | Micro stat mid |\n| 9–10 | Primary Sans | Kräftig / Buch | 100% | +10% | UPPERCASE | Nav labels, eyebrow tags |\n| 9 | Primary Sans Breit | Dreiviertelfett | 100% | +10% | UPPERCASE | Date stamp |\n\n### Key Typography Rules\n- **Line height is consistently tight**: 80–100% for headlines, 100–120% for body text.\n- **Letter spacing is negative at large sizes** (-1% to -3%) and **positive at small sizes** (+2% to +10%).\n- **Uppercase transforms** are used for nav items, eyebrow labels, stats, and hero headlines.\n- **Reckless Neue** is strictly editorial — quotes, pull-outs, testimonials only.\n- **Primary Sans Breit** is used for wide/condensed label contexts (section dates, wide tags).\n\n---\n\n## Effects / Shadows\n\n### Card shadow (`SIRE card`)\nTwo-layer drop shadow for depth:\n```css\nbox-shadow:\n  4px 4px 20px 0px rgba(0, 0, 0, 0.03),\n  0px 0px 200px 0px rgba(0, 0, 0, 0.10);\n```\n\n---\n\n## Border Radius\n\n| Value | Usage |\n|---|---|\n| `8px` | Small elements (tags, inputs, small cards) |\n| `14px` | Medium components |\n| `16px` | Standard cards |\n| `20px` | Large cards / modals |\n\n---\n\n## Spacing & Layout\n\n### Button padding\n| Variant | Padding | Gap |\n|---|---|---|\n| Primary (wide) | 16px top / 51px sides / 20px bottom | 10px |\n| Primary (standard) | 16px top / 24px sides / 20px bottom | 6px |\n| Secondary icon | 14px top / 24px side",
+      "sections": [
+        "Design System Rules — Atelier × Pulse",
+        "Colors",
+        "Typography",
+        "Fonts",
+        "Type Scale",
+        "Key Typography Rules",
+        "Effects / Shadows",
+        "Card shadow (`SIRE card`)",
+        "Border Radius",
+        "Spacing & Layout",
+        "Button padding",
+        "Common gaps",
+        "Grid system",
+        "Component Patterns",
+        "Buttons",
+        "Cards",
+        "Navigation",
+        "Tags / Badges",
+        "Stats / Numbers",
+        "Design Voice & Aesthetic"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/pulse/figma-frame-vs-component-mcp",
+      "name": "Figma MCP: Frame vs. Component — Cosa cambia nell'estrazione web",
+      "slug": "figma-frame-vs-component-mcp",
+      "scope": "project",
+      "project": "pulse",
+      "author": "team",
+      "tags": [],
+      "fileSize": 2469,
+      "description": "Documents how selecting frames vs. components in Figma MCP affects code extraction quality — typed props, variants, and reusability.",
+      "body": "# Figma MCP: Frame vs. Component — Cosa cambia nell'estrazione web\n\n## Contesto\nQuando usi il **Figma MCP** (`get_design_context`) per portare un design sul web, il tipo di nodo che selezioni influenza la qualità e l'utilità del codice generato.\n\n---\n\n## Frame semplice\n\nQuando chiami `get_design_context` su un frame normale, il MCP lo tratta come uno **snapshot statico** di quel nodo specifico:\n\n- Restituisce layout, stili e struttura dei layer figli\n- Genera codice per quell'istanza esatta\n- **Nessun segnale di riusabilità** — il MCP non sa che quel design è pensato per essere usato in più posti\n\n---\n\n## Componente (o istanza di componente)\n\nQuando il frame è un **componente Figma**, il MCP riceve metadati più ricchi:\n\n- Il nodo è tipizzato come `COMPONENT` o `INSTANCE` (non solo `FRAME`), segnalando chiaramente l'intento di riusabilità\n- Le **component properties** (varianti, prop booleane, override di testo) vengono esposte → il codice generato può riflettere cose come `size=\"lg\"` o `disabled={true}` invece di valori hardcoded\n- Si può usare **Code Connect** — questo è il punto chiave: puoi collegare il componente Figma a un file reale nel tuo codebase (`Button.tsx`, ecc.), così `get_design_context` restituisce *il tuo* componente esistente invece di rigenerare codice da zero\n\n---\n\n## Confronto pratico\n\n|  | Frame semplice | Componente |\n|---|---|---|\n| Codice generato | HTML/CSS/JSX letterale che replica i layer | Stesso, ma può mappare al tuo codebase reale via Code Connect |\n| Props/varianti esposte | ❌ | ✅ |\n| Segnale di riusabilità | Nessuno | Forte |\n| Code Connect compatibile | ❌ | ✅ |\n| Istanze multiple sincronizzate | N/A | Tutte le istanze condividono la stessa definizione |\n\n---\n\n## Quando fa davvero la differenza\n\n**Non cambia molto** se vuoi solo una traduzione una-tantum di un design statico in codice web — il MCP genera codice ragionevole in entrambi i casi.\n\n**Fa molta differenza** se:\n- Il frame viene riusato in più punti (nav, card, button, ecc.)\n- Vuoi che il codice generato rifletta **props/varianti** invece di valori hardcoded\n- Hai impostato (o vuoi impostare) **Code Connect** per puntare il MCP al tuo codebase esistente invece di rigenerare codice ogni volta\n\n---\n\n## Regola pratica\n\n> **Fallo diventare un componente se è pensato per essere riusabile.** Il MCP produrrà codice molto più utile, guidato da props, e potrà agganciarsi alla tua component library reale.",
+      "sections": [
+        "Figma MCP: Frame vs. Component — Cosa cambia nell'estrazione web",
+        "Contesto",
+        "Frame semplice",
+        "Componente (o istanza di componente)",
+        "Confronto pratico",
+        "Quando fa davvero la differenza",
+        "Regola pratica"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/pulse/implementation-plan",
+      "name": "Implementation Plan — Atelier × Pulse Horizontal Scroll Website",
+      "slug": "implementation-plan",
+      "scope": "project",
+      "project": "pulse",
+      "author": "team",
+      "tags": [],
+      "fileSize": 8805,
+      "description": "Technical implementation plan for the Pulse horizontal-scroll website — Lenis smooth scroll, GSAP animations, and the ScrollStudio scroll pattern.",
+      "body": "# Implementation Plan — Atelier × Pulse Horizontal Scroll Website\n\n## Context\n\nBuilding a horizontal-scrolling portfolio/pitch website for Atelier × Pulse from a Figma design (13,093px × 810px). The site uses Lenis smooth scroll, GSAP/ScrollTrigger animations, and follows the ScrollStudio pattern from `scroll-features-reference.md`. The design system is defined in `design-system.md`.\n\n---\n\n## Tech Stack\n\n- **Next.js 14** (App Router, TypeScript)\n- **Lenis** (`@studio-freight/react-lenis`) — horizontal smooth scroll\n- **GSAP** + ScrollTrigger + CustomEase — scroll-driven animations\n- **CSS Modules** — scoped styling (matches ScrollStudio pattern)\n- **Primary Sans** + **Editorial Serif** — system-installed fonts via `local()`\n\n---\n\n## Sections (left → right in horizontal scroll)\n\n| # | Section | Width | Key Elements |\n|---|---------|-------|-------------|\n| 1 | **Hero** | ~1440px | Headline \"BUILT FOR EXPERIENCE BRANDS...\", nav buttons, video thumb, scroll indicator |\n| 2 | **About** | ~760px | \"about Atelier\" eyebrow, body text, vertical divider |\n| 3 | **Background** | ~672px | Extended context text about Pulse opportunity |\n| 4 | **Year + Awards** | ~900px | \"2026\" display, credentials grid (6 awards) |\n| 5 | **Cases** | ~5298px | Dark bg, 4 case study cards (NDE, Velorum, Mixport, SNAP.io) |\n| 6 | **Our Impact** | ~1740px | Stats (15+, 8+, 120+), pie chart, testimonial quote |\n| 7 | **RFP / News** | ~1200px | \"READY TO RESPOND\" heading, 3 news blocks |\n| 8 | **Get In Touch** | ~1440px | Full-bleed image, CTA, contact details |\n\n---\n\n## Step-by-Step Implementation\n\n### Step 1: Project Scaffold\n- `npx create-next-app@latest` with TypeScript, App Router, CSS Modules — in current directory\n- Install dependencies: `gsap`, `@studio-freight/react-lenis`\n- Reference system-installed fonts (`Primary Sans`, `Primary Sans Breit`, `Editorial Serif`) via CSS `@font-face` with `local()`\n- Export case study images + video thumbnails from Figma via `figma_capture_screenshot` and save to `public/images/`\n- Create CSS custom properties from design system tokens (colors, radii, shadows)\n\n### Step 2: Global Layout + Lenis Horizontal Scroll\n- **`app/layout.tsx`**: Root layout with Lenis provider, font loading\n- **`app/page.tsx`**: Main page with horizontal scroll container\n- **`components/SmoothScroll.tsx`**: Lenis wrapper with `orientation: \"horizontal\"`, `gestureOrientation: \"both\"`, synced with GSAP ticker\n- **CSS**: `inline-flex` container, `flex-shrink: 0` children, `height: 100vh`, fixed black bg\n\n### Step 3: Navigation\n- **`components/Nav.tsx`**: Fixed nav bar (logo, \"Campagnes\", menu hamburger)\n- Positioned fixed top, z-indexed above scroll content\n- Matches `nav desk` instance from Figma (304×34px, pill shape)\n\n### Step 4: Hero Section\n- **`components/sections/Hero.tsx`**\n- Headline: \"BUILT FOR EXPERIENCE BRANDS OPERATING AT GLOBAL SCALE.\" (84px, Extrafett, uppercase)\n- Button row: 5 nav buttons (Company Overview, Why Atelier, Case Studies, Our impact, Get in touch)\n- Video thumbnail placeholder (320×180)\n- Scroll indicator (\"Scroll →\") and \"← Begin\" back link\n\n### Step 5: About + Background Section\n- **`components/sections/About.tsx`**\n- Eyebrow label \"about Atelier\" with dot indicator\n- Body text (28px Buch) about Atelier's consultancy\n- Vertical divider line\n- Background context text about Pulse opportunity (18px body)\n\n### Step 6: Year + Awards Section\n- **`components/sections/Awards.tsx`**\n- \"2026\" display text (128px height)\n- \"CREDENTIALS\" eyebrow\n- 2-column awards grid (6 items): AWWWARDS, German Design Award, Emerce Top 100, Lovie Awards, Dutch Interactive Awards, FD Gazellen\n\n### Step 7: Case Studies Section\n- **`components/sections/Cases.tsx`**\n- Dark background (#1c1c1c) panel spanning full section\n- 4 case cards (1236×648 each) with:\n  - Case image (exported from Figma)\n  - Yellow accent strip (5px wide)\n  - Category tag (yellow bg, black text)\n  - Title (ExtraBold), services, divider line, description\n- Cards spaced with gap, sitting on dark background\n\n### Step 8: Our Impact Section\n- **`components/sections/Impact.tsx`**\n- \"OUR IMPACT\" heading (52px Extrafett)\n- 3 stat blocks: \"15+\" (160px), \"8+\" (160px), \"120+\" (52px) — yellow color\n- Pie/donut chart (CSS-based or SVG)\n- Testimonial quote with Reckless Neue opening quote mark\n- Contact/source info sidebar\n\n### Step 9: RFP + News Section\n- **`components/sections/Rfp.tsx`**\n- \"READY TO RESPOND TO YOUR RFP.\" heading\n- \"our expertise\" eyebrow\n- Body text\n- 3 news blocks with image thumbnails, dates (Sans Wide), and titles\n\n### Step 10: Get In Touch Section\n- **`components/sections/Contact.tsx`**\n- Full-viewport image background\n- \"Get in touch\" heading (52px Extrafett)\n- Description text\n- \"Visit website\" button (secondary dark variant)\n\n### Step 11: Scroll Progress Indicator\n- **`components/ScrollProgress.tsx`**\n- Fixed bottom bar with tick marks (28 divs)\n- Draggable `[SCROLL]` handle with bracket SVGs\n- Tracks Lenis scroll progress\n- Starts hidden (",
+      "sections": [
+        "Implementation Plan — Atelier × Pulse Horizontal Scroll Website",
+        "Context",
+        "Tech Stack",
+        "Sections (left → right in horizontal scroll)",
+        "Step-by-Step Implementation",
+        "Step 1: Project Scaffold",
+        "Step 2: Global Layout + Lenis Horizontal Scroll",
+        "Step 3: Navigation",
+        "Step 4: Hero Section",
+        "Step 5: About + Background Section",
+        "Step 6: Year + Awards Section",
+        "Step 7: Case Studies Section",
+        "Step 8: Our Impact Section",
+        "Step 9: RFP + News Section",
+        "Step 10: Get In Touch Section",
+        "Step 11: Scroll Progress Indicator",
+        "Step 12: GSAP Animations",
+        "Step 13: Noise Texture Overlay",
+        "File Structure",
+        "Design Tokens (from design-system.md)",
+        "Key Content (extracted from Figma)",
+        "Hero",
+        "About",
+        "Stats",
+        "Cases",
+        "Get In Touch",
+        "Verification"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/pulse/scroll-features-reference",
+      "name": "Scroll Features Reference — ScrollStudio Pattern",
+      "slug": "scroll-features-reference",
+      "scope": "project",
+      "project": "pulse",
+      "author": "team",
+      "tags": [],
+      "fileSize": 7588,
+      "description": "Reverse-engineered scroll animation patterns from ScrollStudio — horizontal scroll, parallax layers, pinned sections with GSAP and ScrollTrigger.",
+      "body": "# Scroll Features Reference — ScrollStudio Pattern\n\nReverse-engineered from example-studio.com/work/sample-scroll-project\n\n---\n\n## Dependencies\n\n- **Lenis** (v1.0.27) — smooth scroll engine via `@studio-freight/react-lenis`\n- **GSAP** + **ScrollTrigger** + **CustomEase** — scroll-driven animations\n- **Next.js** — framework (page-level orientation switching)\n\n---\n\n## 1. Horizontal Scroll\n\nLenis is configured globally with orientation switching per page type.\n\n### Lenis Config\n\n```js\nconst lenisOptions = {\n  duration: 1.3,\n  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),\n  wheelMultiplier: 1.4,\n  orientation: page.type === \"work_item\" ? \"horizontal\" : \"vertical\",\n  gestureOrientation: page.type === \"work_item\" ? \"both\" : \"vertical\",\n};\n```\n\n- `orientation: \"horizontal\"` makes Lenis scroll the page left/right\n- `gestureOrientation: \"both\"` allows both swipe directions to trigger horizontal scroll (important for trackpads/touch)\n\n### Sync GSAP ticker with Lenis\n\n```js\nuseEffect(() => {\n  if (!lenis) return;\n  ScrollTrigger.refresh();\n  gsap.ticker.remove(gsap.updateRoot);\n  raf.add((time) => {\n    gsap.updateRoot(time / 1000);\n    lenis.raf(time);\n  });\n}, [lenis]);\n```\n\n### Layout CSS\n\n```css\n.workItemFlex {\n  display: inline-flex;\n  column-gap: 1.39rem;          /* ~20px scaled */\n  height: 100vh;\n  height: 100svh;\n}\n\n.workItemFlex > * {\n  flex-shrink: 0;\n}\n\n/* Fixed black background behind everything */\n.bg {\n  position: fixed;\n  inset: 0;\n  width: 100vw;\n  height: 100vh;\n  background-color: #000;\n  z-index: -11;\n}\n```\n\nKey: `inline-flex` + `flex-shrink: 0` on children creates a naturally wide container. Lenis scrolls it horizontally.\n\n### Mobile fallback (<=480px)\n\n```css\n@media screen and (max-width: 480px) {\n  .workItemFlex {\n    display: flex;\n    flex-direction: column;\n    height: auto;\n  }\n}\n```\n\n---\n\n## 2. Gradient Rise + Text Reveal\n\nThe hero section is `200vw` wide. As you scroll through it horizontally, two things animate via ScrollTrigger with `scrub`:\n\n### Hero CSS\n\n```css\n.header {\n  position: relative;\n  width: 200vw;\n  height: 100vh;\n  overflow-y: clip;\n}\n\n.gradient {\n  position: absolute;\n  inset: 0;\n  transform: scaleY(0);\n  transform-origin: bottom;\n  background: linear-gradient(0deg, #000, transparent);\n}\n\n.titleWrap {\n  position: sticky;\n  left: 1.39rem;\n  bottom: 50%;\n  width: 50rem;\n  color: #fff;\n  mix-blend-mode: difference;\n  transform: translate3d(0, 50%, 0);\n}\n\n.grid {\n  position: sticky;\n  bottom: 0;\n  left: 0;\n  width: 100vw;\n  color: #fff;\n  mix-blend-mode: difference;\n  transform: translate3d(0, 100%, 0);   /* starts off-screen below */\n}\n```\n\n### GSAP Animations\n\n```js\nuseEffect(() => {\n  if (window.innerWidth <= 480) return;\n\n  const ctx = gsap.context(() => {\n    // Gradient scales up from bottom\n    gsap.to(gradientRef.current, {\n      scrollTrigger: {\n        horizontal: true,\n        trigger: headerRef.current,\n        scrub: true,\n        start: \"left left\",\n        end: \"right right\",\n        invalidateOnRefresh: true,\n      },\n      scaleY: 1,\n    });\n\n    // Info grid slides up into view\n    gsap.to(gridRef.current, {\n      scrollTrigger: {\n        horizontal: true,\n        trigger: headerRef.current,\n        scrub: true,\n        start: \"left left\",\n        end: \"right right\",\n        invalidateOnRefresh: true,\n      },\n      y: 0,\n    });\n  });\n\n  return () => ctx.revert();\n}, [gridRef, headerRef]);\n```\n\nBoth use `scrub: true` so they follow scroll position exactly (no play/pause).\n\n---\n\n## 3. [SCROLL] Progress Indicator\n\nA fixed bottom bar with tick marks and a draggable `[SCROLL]` handle.\n\n### Structure\n\n```\nscrollWrap (fixed, bottom: 0, starts at translateY(50vh))\n  scroll (sticky, flex, space-between)\n    div × 28 (tick marks)\n    scrollHandle (absolute, translateX based on progress)\n      brackets (two SVG bracket icons [ ])\n      span \"SCROLL\"\n```\n\n### CSS\n\n```css\n.scrollWrap {\n  position: fixed;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  padding: 1.67rem 0;\n  transform: translateY(50vh);          /* hidden below, animated to y:0 */\n  z-index: 3;\n  user-select: none;\n}\n\n.scroll {\n  position: sticky;\n  left: 0;\n  width: 100vw;\n  padding: 0 3.47rem;                  /* ~50px scaled */\n  display: flex;\n  justify-content: space-between;\n}\n\n/* Tick marks */\n.scroll div:not(.scrollHandle) {\n  width: 0.14rem;                       /* ~2px */\n  height: 0.83rem;                      /* ~12px */\n  background: #323232;\n}\n\n/* Handle */\n.scrollHandle {\n  position: absolute;\n  top: -0.28rem;\n  left: 0;\n  color: #fff;\n  cursor: grab;\n}\n\n.brackets {\n  display: flex;\n  justify-content: space-between;\n  width: 6.94rem;                       /* ~100px */\n  height: 1.39rem;                      /* ~20px */\n  background: #000;\n  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);\n}\n\n.scrollHandle.handleDown {\n  cursor: grabbing;\n}\n\n.scrollHandle.handleDown .brackets {\n  transform: scale(1.2);\n}\n```\n\n### Bracket SVGs\n\n```html\n<!-- Left bracket [ -->\n<svg width=\"",
+      "sections": [
+        "Scroll Features Reference — ScrollStudio Pattern",
+        "Dependencies",
+        "1. Horizontal Scroll",
+        "Lenis Config",
+        "Sync GSAP ticker with Lenis",
+        "Layout CSS",
+        "Mobile fallback (<=480px)",
+        "2. Gradient Rise + Text Reveal",
+        "Hero CSS",
+        "GSAP Animations",
+        "3. [SCROLL] Progress Indicator",
+        "Structure",
+        "CSS",
+        "Bracket SVGs",
+        "Progress tracking (JS)",
+        "Scroll bar slides up via GSAP",
+        "Drag-to-scroll",
+        "Responsive px helper",
+        "Custom Eases Used",
+        "Key Patterns"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/solara/new-structure",
+      "name": "New Design Templates — Solara Website",
+      "slug": "new-structure",
+      "scope": "project",
+      "project": "solara",
+      "author": "team",
+      "tags": [],
+      "fileSize": 16303,
+      "description": "Reusable block library and page templates for the Solara website redesign — navigation, hero, content blocks, forms, and footers.",
+      "body": "# New Design Templates — Solara Website\n\n**Figma source:** `https://www.figma.com/design/pQ1rS2tU3vW4xY5zA6bC7d/Demo-Solara?node-id=105-2476`\n**Node:** 105:2476 (\"lunedi'\")\n**Updated:** 2026-03-16 (replaces previous node 94:210)\n\n---\n\n## Reusable Blocks Library\n\nThese are the building blocks shared across templates. Each block is a standalone, reusable component.\n\n### Navigation & Chrome\n\n| Block | Description | Visual |\n|-------|-------------|--------|\n| **Navbar** | White pill-shaped bar with Solara logo (left), nav links (Day Activities & Work, Diagnostics & Treatment, For whom ▾), search icon + blue hamburger button (right). Floats over hero. | All pages |\n| **Footer** | Site-wide footer | All pages |\n| **Breadcrumb** | `Home > Category > Item` breadcrumb with `>` chevron separators. White text, last item bold. | T4, T6, T3-Locatie |\n| **Read aloud** | Screen reader button — pill-shaped \"Read aloud\" with speaker icon. Expands into a toolbar with rewind, pause, forward, stop, volume, close controls. Three states: compact (hero overlay), default, expanded toolbar. | T4, T6 heroes |\n\n### Hero Blocks (Templates)\n\n| Block | Code | Description | Background | Key Elements |\n|-------|------|-------------|------------|--------------|\n| **T1 - Home Hero** | `T1` | Full-bleed photo hero with white curved SVG shapes (Subtract/Intersect) creating a wave cutout at the bottom. 3 overlapping category cards (\"Day Activities & Work\", \"Living & Accommodation\", \"Diagnostics & Treatment\") with slight rotations. Heavy italic headline \"You choose your path, we walk with you.\" | Full-bleed photo + blue SVG wave shapes | 3 rotated category cards (dark blue, light blue, blue), each with title + description + arrow icon |\n| **T3 - Locatie Hero** | `T3` | Deep blue (#1851E9) background with large decorative vector. Location info card (white, with name/address/buttons) overlapping a large rounded photo. Stats bar at bottom (4 columns: Leeftijd, Kamers, Beperking, Wet). Below: orange/brown \"About the location\" section with anchor links + horizontal photo gallery. | #1851E9 (deep blue) | Location card + photo overlap, stats bar, \"About the location\" orange section with photo strip |\n| **T4 - Standard Hero** | `T4` | Blue background (#2A9FFF) with large title (96px Heavy), breadcrumb, \"Read aloud\" screen reader button. Bottom has SVG wave stroke curve transitioning to full-bleed photo. Intro text + rotated photo with decorative orange vector overlapping to the right. | #2A9FFF (blue) | Breadcrumb, 96px title, \"Read aloud\" button, wave SVG transition to photo, intro text + rotated photo with vector |\n| **T6 - Nieuws Hero** | `T6` | Deep blue (#1851E9) background, taller than T4. Breadcrumb + 96px title + meta info (date + share icon) + subtitle text. Rotated photo card on the right side. Wave stroke at bottom. | #1851E9 (deep blue) | Date/share meta, subtitle, rotated photo card, wave transition |\n\n### Content Blocks\n\n| Block | Code | Description | Background |\n|-------|------|-------------|------------|\n| **B2 - Storytelling** | `B2` | Two-column layout: left has bold intro text (32px) + CTA button (\"Get in touch\" with orange arrow) + rounded photo with shadow; right has a slightly rotated photo card. Used in pairs (row 1, row 2) for alternating layouts. | White |\n| **B2 - Intro (no CTA)** | `B2` | Variant of B2 Storytelling without a CTA button. Bold intro text (32px Heavy) on the left with two photos (one rounded bottom-left, one rotated top-right). Used as a page intro block after the hero. | White |\n| **Behandelmethoden Item** | — | Simple two-column text block: left column has large Heavy headline (56px), right has body text (20px). No images. Clean content block. | White |\n| **For whom / For clients** | — | Intro text (32px Heavy) + accordion-style link list (For clients >, For relatives >, For referrers >, etc.) on the left, rotated photo with decorative orange vector on the right. On \"For whom\" page: includes embedded B2 \"De columns van Paul Hendrix\" storytelling section below the accordion. | White (below blue hero) |\n| **B10 - Card Grid** | `B10` | Section title (48px Bold) + 3-column grid of content cards. Each card: rounded image (16:9, some slightly rotated), title with arrow icon, description text. Used as 2-row (6 cards) or single-row (3 cards) grid. One card image in each row is slightly rotated for playful feel. | White |\n| **B10 - Methoden Grid** | `B10` | Variation of B10 for treatment methods. 3x2 grid of method cards with thumbnail photos, method name + arrow, brief description. | White |\n| **Contact Block** | — | Two-column: left has \"Contact\" title (40px Heavy) + description + \"Get in touch\" CTA button; right has a large rotated photo card with shadow. Simple, clean layout. | White |\n| **B11 - Info Carousel** | `B11` | Title + horizontal scrollable cards in orange/brown color scheme. Cards are rounded (32px radius), slightly rotated, with large title + body text. Colors alternate: orange (#F68130), dark brown (#",
+      "sections": [
+        "New Design Templates — Solara Website",
+        "Reusable Blocks Library",
+        "Navigation & Chrome",
+        "Hero Blocks (Templates)",
+        "Content Blocks",
+        "Page Templates & Block Composition",
+        "1. T1 - Home",
+        "2. T2 - Wonen en ambulant (Category Listing)",
+        "3. T3 - Locatie item (Location Detail)",
+        "4. T4 - For whom is Solara (Hub)",
+        "5. T4 - For clients (Audience Page)",
+        "6. T4 - Client item (Detail Page)",
+        "7. T6 - Nieuws item (News Article)",
+        "8. T4 - Behandelmethoden (Treatment Methods Overview)",
+        "9. T4 - Behandelmethoden item (Treatment Detail)",
+        "10. T4 - Over ons (About Us)",
+        "Changelog (vs. previous design node 94:210)",
+        "Block Reuse Matrix",
+        "Design Tokens (from Figma)",
+        "Colors",
+        "Typography (Rounded Sans)",
+        "Radius",
+        "Shadows",
+        "Decorative Elements"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/solara/sitemap",
+      "name": "Solara Website -- Sitemap & Design Templates",
+      "slug": "sitemap",
+      "scope": "project",
+      "project": "solara",
+      "author": "team",
+      "tags": [],
+      "fileSize": 7094,
+      "description": "Full sitemap and page template mapping for Solara — site structure, content types, and which blocks compose each page.",
+      "body": "# Solara Website -- Sitemap & Design Templates\n\n> Source: [Figma -- Sitemap](https://www.figma.com/design/pQ1rS2tU3vW4xY5zA6bC7d/Demo-Solara?node-id=1-4339) | [Figma -- Templates](https://www.figma.com/design/pQ1rS2tU3vW4xY5zA6bC7d/Demo-Solara?node-id=7-556)\n\n---\n\n## 1. Site Structure\n\n```\nHome\n│\n├── Diagnostics & Treatment (primary)\n│     └── Treatment item page\n│\n├── Day Activities & Work (primary)\n│     └── Day Activities & Work item page\n│\n├── Living & Accommodation (primary)\n│     └── Living & Accommodation item page\n│\n├── For Whom (primary hub)\n│     ├── For Clients\n│     │     └── Client item page\n│     ├── For Family & Relatives\n│     │     └── Family item page\n│     ├── For Referrers\n│     │     └── Referrer item page\n│     └── For Volunteers\n│           └── Volunteer item page\n│\n├── About Us (primary hub)\n│     ├── Our Treatment Methods\n│     │     └── Treatment method item page\n│     ├── Organisation\n│     │     └── Organisation item page\n│     └── News\n│           └── News item page\n│\n├── Contact (meta navigation)\n├── Registration (meta navigation, stub)\n├── Careers (meta navigation, stub)\n├── MySolara (meta navigation, stub)\n└── Search / Map (meta navigation, stub)\n```\n\n**Total: ~27 unique pages.** Registration, Careers, MySolara, and Search/Map are stubs in the Figma design.\n\n---\n\n## 2. Route Mapping\n\n| Page | Route | Figma Status |\n|------|-------|-------------|\n| Home | `/` | Designed |\n| Diagnostics & Treatment | `/treatment` | Designed |\n| Treatment item page | `/treatment/[slug]` | Designed |\n| Day Activities & Work | `/day-activities` | Designed |\n| Day Activities item page | `/day-activities/[slug]` | Designed |\n| Living & Accommodation | `/living` | Designed |\n| Living & Accommodation item page | `/living-detail` | Designed |\n| For Whom (hub) | `/voor-wie` | Designed |\n| For Clients | `/for-clients` | Designed |\n| Client item page | `/for-clients/[slug]` | Designed |\n| For Family & Relatives | `/for-relatives` | Designed |\n| Family item page | `/for-relatives/[slug]` | Designed |\n| For Referrers | `/for-referrers` | Designed |\n| Referrer item page | `/for-referrers/[slug]` | Designed |\n| For Volunteers | `/for-volunteers` | Designed |\n| Volunteer item page | `/for-volunteers/[slug]` | Designed |\n| About Us | `/about-us` | Designed |\n| Our Treatment Methods | `/about-us/treatment-methods` | Designed |\n| Treatment method item page | `/about-us/treatment-methods/[slug]` | Designed |\n| Organisation | `/organisation` | Designed |\n| Organisation item page | `/organisation/[slug]` | Designed |\n| News | `/news` | Designed |\n| News item page | `/news/[slug]` | Designed |\n| Contact | `/contact` | Designed |\n| Registration | `/registration` | Stub |\n| Careers | `/careers` | Stub |\n| MySolara | `/mijnsolara` | Stub |\n| Search / Map | `/search` | Stub |\n\n---\n\n## 3. Design Templates\n\nThe Figma file organizes templates into 4 flows: **Home**, **Location Flow**, **For Whom Flow**, and **About Us Flow**. All templates are designed at **1440px width** (desktop).\n\n### T1 -- Home Page\n**Sections:**\n1. Hero (with 3 overlapping service cards: Living, Day Activities, Treatment)\n2. Storytelling (3-panel layout: intro + \"How is it arranged\" + personal column)\n3. Map (\"200+ locations across Utrecht province\")\n4. Related Links carousel (\"More for clients\")\n5. Team section (\"Meet the team\" + photo composition)\n6. Contact CTA (address + phone/email cards)\n7. Footer\n\n### T2 -- Location Listing (used for Living, Day Activities, Treatment)\n**Sections:**\n1. Hero with filter bar (Age, Disability, Place, Circumstances)\n2. Breadcrumb + page title\n3. Location cards grid (rows of 4, grouped by category with horizontal scroll)\n4. Team section\n5. Contact CTA\n6. Footer\n\n### T3 -- Location Detail\n**Sections:**\n1. Hero with location info (title, subtitle, 4 detail columns: Age/Rooms/Disability/Funding)\n2. Photo gallery (5-photo horizontal grid)\n3. About section with quick links (For whom & support, Day activities, Referral & costs, Register)\n4. Storytelling (2-panel: \"How is it arranged\" + personal column)\n5. Related Links carousel\n6. Team section\n7. Additional location cards\n8. Footer\n\n### T4 -- Content/Item Pages (shared structure, multiple variants)\nUsed for: Treatment method items, Client items, About Us hub, For Whom hub, audience-specific pages (Clients, Family, Referrers, Volunteers), Treatment methods listing.\n\n**Common sections:**\n1. Hero with breadcrumb + page title\n2. Content intro (lead text + media)\n3. Content blocks (2-column: title left, body right)\n4. Contact CTA\n5. Footer\n\n**Variant-specific sections:**\n- **Hub pages** (About Us, For Whom): Hero + sub-links list with chevrons + storytelling panel\n- **Audience listing pages** (For Clients, etc.): Hero + 6-card method grid (3x2) + related links carousel + team section\n- **Treatment methods listing**: Hero + 6-card method grid\n- **Item pages**: Hero + content intro + multiple content blocks + contact CTA\n\n---\n\n## 4. Shared Components\n\n| Compon",
+      "sections": [
+        "Solara Website -- Sitemap & Design Templates",
+        "1. Site Structure",
+        "2. Route Mapping",
+        "3. Design Templates",
+        "T1 -- Home Page",
+        "T2 -- Location Listing (used for Living, Day Activities, Treatment)",
+        "T3 -- Location Detail",
+        "T4 -- Content/Item Pages (shared structure, multiple variants)",
+        "4. Shared Components",
+        "5. Design Patterns",
+        "Grid System",
+        "Navigation",
+        "Interactive Elements",
+        "6. Contact Information"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/solara/extraction",
+      "name": "Extraction",
+      "slug": "extraction",
+      "scope": "project",
+      "project": "solara",
+      "author": "team",
+      "tags": [],
+      "fileSize": 4822,
+      "description": "Workflow for extracting Figma designs via MCP — connecting the server, reading components, and translating to production code.",
+      "body": "Prerequisites\nFigma MCP server must be connected and accessible\nBefore proceeding, verify the Figma MCP server is connected by checking if Figma MCP tools (e.g., get_design_context) are available.\nIf the tools are not available, the Figma MCP server may not be enabled. Guide the user to enable the Figma MCP server that is included with the plugin. They may need to restart their MCP client afterward.\nUser must provide a Figma URL in the format: https://figma.com/design/:fileKey/:fileName?node-id=1-2\n:fileKey is the file key\n1-2 is the node ID (the specific component or frame to implement)\nProject should have an established design system or component library (preferred)\nRequired Workflow\nFollow these steps in order. Do not skip steps.\n\nStep 1: Get Node ID\nOption A: Parse from Figma URL\nWhen the user provides a Figma URL, extract the file key and node ID to pass as arguments to MCP tools.\n\nURL format: https://figma.com/design/:fileKey/:fileName?node-id=1-2\n\nExtract:\n\nFile key: :fileKey (the segment after /design/)\nNode ID: 1-2 (the value of the node-id query parameter)\nExample:\n\nURL: https://figma.com/design/tU5vW6xY7zA8bC9dE0fG1h/DesignSystem?node-id=42-15\nFile key: tU5vW6xY7zA8bC9dE0fG1h\nNode ID: 42-15\nStep 2: Fetch Design Context\nRun get_design_context with the extracted file key and node ID.\n\nget_design_context(fileKey=\":fileKey\", nodeId=\"1-2\")\n\nThis provides the structured data including:\n\nLayout properties (Auto Layout, constraints, sizing)\nTypography specifications\nColor values and design tokens\nComponent structure and variants\nSpacing and padding values\nIf the response is too large or truncated:\n\nRun get_metadata(fileKey=\":fileKey\", nodeId=\"1-2\") to get the high-level node map\nIdentify the specific child nodes needed from the metadata\nFetch individual child nodes with get_design_context(fileKey=\":fileKey\", nodeId=\":childNodeId\")\nStep 3: Capture Visual Reference\nRun get_screenshot with the same file key and node ID for a visual reference.\n\nget_screenshot(fileKey=\":fileKey\", nodeId=\"1-2\")\n\nThis screenshot serves as the source of truth for visual validation. Keep it accessible throughout implementation.\n\nStep 4: Download Required Assets\nDownload any assets (images, icons, SVGs) returned by the Figma MCP server.\n\nIMPORTANT: Follow these asset rules:\n\nIf the Figma MCP server returns a localhost source for an image or SVG, use that source directly\nDO NOT import or add new icon packages - all assets should come from the Figma payload\nDO NOT use or create placeholders if a localhost source is provided\nAssets are served through the Figma MCP server's built-in assets endpoint\nStep 5: Translate to Project Conventions\nTranslate the Figma output into this project's framework, styles, and conventions.\n\nKey principles:\n\nTreat the Figma MCP output (typically React + Tailwind) as a representation of design and behavior, not as final code style\nReplace Tailwind utility classes with the project's preferred utilities or design system tokens\nReuse existing components (buttons, inputs, typography, icon wrappers) instead of duplicating functionality\nUse the project's color system, typography scale, and spacing tokens consistently\nRespect existing routing, state management, and data-fetch patterns\nStep 6: Achieve 1:1 Visual Parity\nStrive for pixel-perfect visual parity with the Figma design.\n\nGuidelines:\n\nPrioritize Figma fidelity to match designs exactly\nAvoid hardcoded values - use design tokens from Figma where available\nWhen conflicts arise between design system tokens and Figma specs, prefer design system tokens but adjust spacing or sizes minimally to match visuals\nFollow WCAG requirements for accessibility\nAdd component documentation as needed\nStep 7: Validate Against Figma\nBefore marking complete, validate the final UI against the Figma screenshot.\n\nValidation checklist:\n\n Layout matches (spacing, alignment, sizing)\n Typography matches (font, size, weight, line height)\n Colors match exactly\n Interactive states work as designed (hover, active, disabled)\n Responsive behavior follows Figma constraints\n Assets render correctly\n Accessibility standards met\nImplementation Rules\nComponent Organization\nPlace UI components in the project's designated design system directory\nFollow the project's component naming conventions\nAvoid inline styles unless truly necessary for dynamic values\nDesign System Integration\nALWAYS use components from the project's design system when possible\nMap Figma design tokens to project design tokens\nWhen a matching component exists, extend it rather than creating a new one\nDocument any new components added to the design system\nCode Quality\nAvoid hardcoded values - extract to constants or design tokens\nKeep components composable and reusable\nAdd TypeScript types for component props\nInclude JSDoc comments for exported components",
+      "sections": [],
+      "connections": []
+    },
+    {
+      "id": "projects/solara/implementdesign",
+      "name": "Implement Design from Figma",
+      "slug": "implementdesign",
+      "scope": "project",
+      "project": "solara",
+      "author": "team",
+      "tags": [],
+      "fileSize": 4863,
+      "description": "Translates Figma designs into production-ready code with 1:1 visual parity using MCP extraction and screenshot validation.",
+      "body": "# Implement Design from Figma\n\nTranslate the provided Figma design into production-ready code with 1:1 visual parity.\n\n## Prerequisites\n\n- Figma MCP server must be connected and accessible\n- Verify by checking if Figma MCP tools (e.g., `get_design_context`) are available\n- If tools are unavailable, guide the user to enable the Figma MCP server and restart their MCP client\n\n## Required Workflow\n\nFollow these steps in order. Do not skip steps.\n\n### Step 1: Parse the Figma URL\n\nExtract the file key and node ID from the provided URL: `$ARGUMENTS.url`\n\nURL format: `https://figma.com/design/:fileKey/:fileName?node-id=1-2`\n\n- **File key**: the segment after `/design/`\n- **Node ID**: the value of the `node-id` query parameter (convert `-` to `:` as needed)\n- For branch URLs (`/design/:fileKey/branch/:branchKey/...`), use `branchKey` as the file key\n\n### Step 2: Fetch Design Context\n\nRun `get_design_context` with the extracted file key and node ID.\n\nThis provides:\n- Layout properties (Auto Layout, constraints, sizing)\n- Typography specifications\n- Color values and design tokens\n- Component structure and variants\n- Spacing and padding values\n\nIf the response is too large or truncated:\n1. Run `get_metadata` to get the high-level node map\n2. Identify specific child nodes from the metadata\n3. Fetch individual child nodes with `get_design_context`\n\n### Step 3: Capture Visual Reference\n\nRun `get_screenshot` with the same file key and node ID. This screenshot is the source of truth for visual validation throughout implementation.\n\n### Step 4: Download Required Assets\n\nDownload any assets (images, icons, SVGs) returned by the Figma MCP server.\n\n**Asset rules:**\n- If a localhost source is returned for an image or SVG, use that source directly\n- DO NOT import or add new icon packages — all assets should come from the Figma payload\n- DO NOT use or create placeholders if a localhost source is provided\n- Assets are served through the Figma MCP server's built-in assets endpoint\n\n### Step 5: Translate to Project Conventions\n\nTranslate the Figma output into this project's framework, styles, and conventions:\n\n- Treat the Figma MCP output (typically React + Tailwind) as a representation of design and behavior, not final code\n- Replace Tailwind utility classes with the project's preferred utilities or design system tokens\n- Reuse existing components (buttons, inputs, typography, icon wrappers) instead of duplicating\n- Use the project's color system, typography scale, and spacing tokens consistently\n- Respect existing routing, state management, and data-fetch patterns\n\n### Step 6: Achieve 1:1 Visual Parity\n\n- Prioritize Figma fidelity to match designs exactly\n- Avoid hardcoded values — use design tokens from Figma where available\n- When conflicts arise between design system tokens and Figma specs, prefer design system tokens but adjust spacing/sizes minimally to match visuals\n- Follow WCAG requirements for accessibility\n\n### Step 7: Validate Against Figma\n\nBefore marking complete, validate the final UI against the Figma screenshot.\n\n**Validation checklist:**\n- [ ] Layout matches (spacing, alignment, sizing)\n- [ ] Typography matches (font, size, weight, line height)\n- [ ] Colors match exactly\n- [ ] Interactive states work as designed (hover, active, disabled)\n- [ ] Responsive behavior follows Figma constraints\n- [ ] Assets render correctly\n- [ ] Accessibility standards met\n\n## Implementation Rules\n\n### Component Organization\n- Place UI components in the project's designated design system directory\n- Follow the project's component naming conventions\n- Avoid inline styles unless truly necessary for dynamic values\n\n### Design System Integration\n- ALWAYS use components from the project's design system when possible\n- Map Figma design tokens to project design tokens\n- When a matching component exists, extend it rather than creating a new one\n\n### Code Quality\n- Avoid hardcoded values — extract to constants or design tokens\n- Keep components composable and reusable\n- Add TypeScript types for component props\n\n## Troubleshooting\n\n- **Truncated output**: Use `get_metadata` first, then fetch specific child nodes individually\n- **Visual mismatch**: Compare side-by-side with the Step 3 screenshot; check spacing, colors, and typography values\n- **Assets not loading**: Verify the Figma MCP server's assets endpoint is accessible; use localhost URLs directly without modification\n- **Token value conflicts**: Prefer project tokens for consistency but adjust spacing/sizing to maintain visual fidelity",
+      "sections": [
+        "Implement Design from Figma",
+        "Prerequisites",
+        "Required Workflow",
+        "Step 1: Parse the Figma URL",
+        "Step 2: Fetch Design Context",
+        "Step 3: Capture Visual Reference",
+        "Step 4: Download Required Assets",
+        "Step 5: Translate to Project Conventions",
+        "Step 6: Achieve 1:1 Visual Parity",
+        "Step 7: Validate Against Figma",
+        "Implementation Rules",
+        "Component Organization",
+        "Design System Integration",
+        "Code Quality",
+        "Troubleshooting"
+      ],
+      "connections": []
+    },
+    {
+      "id": "projects/solara/sitemap-update-workflow",
+      "name": "sitemap-update-workflow",
+      "slug": "sitemap-update-workflow",
+      "scope": "project",
+      "project": "solara",
+      "author": "Gus",
+      "tags": [
+        "sitemap",
+        "workflow",
+        "design-system",
+        "maintenance",
+        "blocks",
+        "components",
+        "fundamentals"
+      ],
+      "created": "",
+      "fileSize": 4992,
+      "description": "Automated workflow to keep the Solara sitemap in sync — triggered when components, blocks, or fundamentals change in the design system.",
+      "body": "# sitemap-update-workflow\n\n\n# Solara — Sitemap Update Workflow\n\n> The Sitemap v2 page in **Solara System Gus** is the atomic source of truth for the design system.\n> It is maintained manually via Claude (Option 2) — triggered at the end of any session where components, blocks, or fundamentals change.\n\n---\n\n## When to trigger an update\n\nTrigger this workflow whenever any of the following happen:\n\n- A new **component** is added or renamed (e.g. new button variant, new card type)\n- A **block** is created, restructured, or its component composition changes\n- A **fundamental** token is added, renamed, or reassigned (type scale, colour, spacing)\n- A **template** is added or renamed\n- A **page** is added to or removed from the sitemap\n\nJust say: **\"update the sitemap\"** — Claude will do the rest.\n\n---\n\n## What Claude does on update\n\n1. **Re-reads all Blocks** (desktop components on the Blocks page) using `figma_execute` + `getMainComponentAsync` to detect which components each block uses\n2. **Re-reads the Fundamentals pages** (Text, Colours, Spacing, Radius, Elevation) to check for new or renamed tokens\n3. **Re-reads the Components pages** to detect new component sets\n4. **Diffs** against the current `blockAtoms` data hardcoded in the last sitemap build\n5. **Rebuilds the Sitemap v2 canvas** from scratch with updated chip data — legend, hierarchy, all cards\n6. **Screenshots** Home card + one item page card to validate visually\n\n---\n\n## Atomic chip colour system (do not change)\n\n| Layer | Colour | Hex |\n|-------|--------|-----|\n| Template | Blue | `#1255C8` |\n| Block | Orange | `#EF4E1A` |\n| Component | Teal | `#2298 7A` |\n| Fundamental | Purple | `#8040CB` |\n\n---\n\n## Current block → component → fundamental map\n\n### B2: Storytelling\n- **Components:** Button\n- **Fundamentals:** type/h3, type/base, color/bg/brand, color/fg/on-dark, space/4, space/5\n\n### B3: Location slider\n- **Components:** Item card, Carousel buttons\n- **Fundamentals:** type/h4, type/base, color/fg/default, color/bg/subtle, space/3, space/4, Radius\n\n### B5: Text block\n- **Components:** Button\n- **Fundamentals:** type/h2, type/h3, type/base, color/fg/default, color/bg/default, space/4, space/5\n\n### B6: IMG / Video\n- **Components:** (none — pure image block)\n- **Fundamentals:** color/bg/brand, space/5, space/6\n\n### B7: FAQ\n- **Components:** FAQ row\n- **Fundamentals:** type/h2, type/base, color/bg/brand-dark, color/fg/on-dark, space/4, space/5, Radius\n\n### B8: Sign-up\n- **Components:** Button, Input fields\n- **Fundamentals:** type/h2, type/base, color/action/primary, color/bg/default, space/3, space/4, space/5, Radius\n\n### B9: Testimonial / Team\n- **Components:** Carousel buttons\n- **Fundamentals:** type/h3, type/base, color/fg/default, space/4, space/5, Radius, Elevation\n\n### B10: Read more\n- **Components:** Item card grid\n- **Fundamentals:** type/h4, type/base, color/fg/default, color/bg/subtle, space/3, space/4, Radius\n\n### B11: Slider\n- **Components:** Feature card, Carousel buttons\n- **Fundamentals:** type/h4, type/base, color/action/primary, color/bg/brand, space/3, space/4, Radius\n\n### B12: Contact\n- **Components:** (none — built directly)\n- **Fundamentals:** type/h2, type/base, color/fg/default, color/action/primary, space/4, space/5\n\n---\n\n## Page → Template → Blocks map\n\n| Page | Template | Blocks |\n|------|----------|--------|\n| Home | T1 | B2, B3, B5, B9, B8, B11, B12 |\n| Diagnostics & Treatment | T2 | B3, B5, B9, B11 |\n| Treatment item | T3 | B5, B9, B7, B8 |\n| Day Activities & Work | T2 | B3, B5, B9, B11 |\n| Day Activities item | T3 | B5, B9, B7, B8 |\n| Living & Staying | T2 | B3, B5, B9, B11 |\n| Living & Staying item | T3 | B5, B9, B7, B8 |\n| For Whom | T4 | B5, B8, B11 |\n| For Clients | T4 | B7, B2, B10, B11 |\n| Client item | T4 | B5, B8 |\n| For Family Members | T4 | B7, B2, B10, B11 |\n| Family Members item | T4 | B5, B8 |\n| For Referrers | T4 | B7, B2, B10, B11 |\n| Referrers item | T4 | B5, B8 |\n| For Volunteers | T4 | B7, B2, B10, B11 |\n| Volunteers item | T4 | B5, B8 |\n| About Us | T4 | B5, B11, B8, B12 |\n| Treatment Methods | T4 | B5, B11, B8 |\n| Treatment Method item | T4 | B5, B8 |\n| Organisation | T4 | B5, B9, B2, B8 |\n| Organisation item | T4 | B5, B8, B12 |\n| News | T5 | B10, B11, B8, B12 |\n| News item | T6 | B5, B6, B8 |\n| Contact | T4 | B9, B8, B12 |\n| Work With Us | T4 | B2, B5, B9, B8, B11 |\n\n---\n\n## Figma file reference\n\n- **File:** Solara System Gus (`eF8gH9iJ0kL1mN2oP3qR4s`)\n- **Sitemap v2 page:** `2:6517`\n- **Canvas frame:** `Solara Sitemap — Blocks & Templates`\n- **Legend frame:** `Legend`\n- **Chip component IDs:** T1=`2:6518`, T2=`2:6521`, T3=`2:6524`, T4=`2:6527`, T5=`2:6530`, T6=`2:6533`, T7=`2:6536`, B2=`2:6539`, B3=`2:6542`, B5=`2:6545`, B6=`2:6548`, B7=`2:6551`, B8=`2:6554`, B9=`2:6557`, B10=`2:6560`, B11=`2:6563`, B12=`2:6566`",
+      "sections": [
+        "sitemap-update-workflow",
+        "Solara — Sitemap Update Workflow",
+        "When to trigger an update",
+        "What Claude does on update",
+        "Atomic chip colour system (do not change)",
+        "Current block → component → fundamental map",
+        "B2: Storytelling",
+        "B3: Location slider",
+        "B5: Text block",
+        "B6: IMG / Video",
+        "B7: FAQ",
+        "B8: Sign-up",
+        "B9: Testimonial / Team",
+        "B10: Read more",
+        "B11: Slider",
+        "B12: Contact",
+        "Page → Template → Blocks map",
+        "Figma file reference"
+      ],
+      "connections": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "_team/convictions",
+      "target": "_team/design-system-patterns",
+      "type": "reference",
+      "label": "We never build from scratch what the system already provides",
+      "description": "See: [[design-system-patterns]]"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "_team/convictions",
+      "type": "reference",
+      "label": "Building inside Figma (everyone)",
+      "description": "See: [[convictions]] — \"We never build from scratch what the system already provides\""
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/museon/mobile-ux-patterns",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/museon/mobile-ux-patterns",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/museon/mobile-ux-patterns",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/museon/collection-editorial-hybrid-redesign",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/museon/collection-editorial-hybrid-redesign",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/museon/collection-editorial-hybrid-redesign",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/museon/desktop-to-mobile",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/museon/desktop-to-mobile",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/museon/desktop-to-mobile",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/museon/ux-architecture",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/museon/ux-architecture",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/museon/ux-architecture",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"museon\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/pulse/design-system",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/pulse/design-system",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/pulse/design-system",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/pulse/figma-frame-vs-component-mcp",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/pulse/figma-frame-vs-component-mcp",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/pulse/figma-frame-vs-component-mcp",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/pulse/implementation-plan",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/pulse/implementation-plan",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/pulse/implementation-plan",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/pulse/scroll-features-reference",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/pulse/scroll-features-reference",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/pulse/scroll-features-reference",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"pulse\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/solara/new-structure",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/solara/new-structure",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/solara/new-structure",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/solara/sitemap",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/solara/sitemap",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/solara/sitemap",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/solara/extraction",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/solara/extraction",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/solara/extraction",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/solara/implementdesign",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/solara/implementdesign",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/solara/implementdesign",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/solara/sitemap-update-workflow",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Design Convictions\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/solara/sitemap-update-workflow",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Design System Patterns\" informs project \"solara\" work"
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/solara/sitemap-update-workflow",
+      "type": "foundation",
+      "label": "informs",
+      "description": "Team knowledge \"Team Workflows\" informs project \"solara\" work"
+    },
+    {
+      "source": "projects/museon/mobile-ux-patterns",
+      "target": "projects/museon/collection-editorial-hybrid-redesign",
+      "type": "sibling",
+      "label": "museon project",
+      "description": "Both part of the museon project knowledge"
+    },
+    {
+      "source": "projects/museon/mobile-ux-patterns",
+      "target": "projects/museon/desktop-to-mobile",
+      "type": "sibling",
+      "label": "museon project",
+      "description": "Both part of the museon project knowledge"
+    },
+    {
+      "source": "projects/museon/mobile-ux-patterns",
+      "target": "projects/museon/ux-architecture",
+      "type": "sibling",
+      "label": "museon project",
+      "description": "Both part of the museon project knowledge"
+    },
+    {
+      "source": "projects/museon/collection-editorial-hybrid-redesign",
+      "target": "projects/museon/desktop-to-mobile",
+      "type": "sibling",
+      "label": "museon project",
+      "description": "Both part of the museon project knowledge"
+    },
+    {
+      "source": "projects/museon/collection-editorial-hybrid-redesign",
+      "target": "projects/museon/ux-architecture",
+      "type": "sibling",
+      "label": "museon project",
+      "description": "Both part of the museon project knowledge"
+    },
+    {
+      "source": "projects/museon/desktop-to-mobile",
+      "target": "projects/museon/ux-architecture",
+      "type": "sibling",
+      "label": "museon project",
+      "description": "Both part of the museon project knowledge"
+    },
+    {
+      "source": "projects/pulse/design-system",
+      "target": "projects/pulse/figma-frame-vs-component-mcp",
+      "type": "sibling",
+      "label": "pulse project",
+      "description": "Both part of the pulse project knowledge"
+    },
+    {
+      "source": "projects/pulse/design-system",
+      "target": "projects/pulse/implementation-plan",
+      "type": "sibling",
+      "label": "pulse project",
+      "description": "Both part of the pulse project knowledge"
+    },
+    {
+      "source": "projects/pulse/design-system",
+      "target": "projects/pulse/scroll-features-reference",
+      "type": "sibling",
+      "label": "pulse project",
+      "description": "Both part of the pulse project knowledge"
+    },
+    {
+      "source": "projects/pulse/figma-frame-vs-component-mcp",
+      "target": "projects/pulse/implementation-plan",
+      "type": "sibling",
+      "label": "pulse project",
+      "description": "Both part of the pulse project knowledge"
+    },
+    {
+      "source": "projects/pulse/figma-frame-vs-component-mcp",
+      "target": "projects/pulse/scroll-features-reference",
+      "type": "sibling",
+      "label": "pulse project",
+      "description": "Both part of the pulse project knowledge"
+    },
+    {
+      "source": "projects/pulse/implementation-plan",
+      "target": "projects/pulse/scroll-features-reference",
+      "type": "sibling",
+      "label": "pulse project",
+      "description": "Both part of the pulse project knowledge"
+    },
+    {
+      "source": "projects/solara/new-structure",
+      "target": "projects/solara/sitemap",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    },
+    {
+      "source": "projects/solara/new-structure",
+      "target": "projects/solara/extraction",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    },
+    {
+      "source": "projects/solara/new-structure",
+      "target": "projects/solara/implementdesign",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    },
+    {
+      "source": "projects/solara/new-structure",
+      "target": "projects/solara/sitemap-update-workflow",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    },
+    {
+      "source": "projects/solara/sitemap",
+      "target": "projects/solara/extraction",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    },
+    {
+      "source": "projects/solara/sitemap",
+      "target": "projects/solara/implementdesign",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    },
+    {
+      "source": "projects/solara/sitemap",
+      "target": "projects/solara/sitemap-update-workflow",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    },
+    {
+      "source": "projects/solara/extraction",
+      "target": "projects/solara/implementdesign",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    },
+    {
+      "source": "projects/solara/extraction",
+      "target": "projects/solara/sitemap-update-workflow",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    },
+    {
+      "source": "projects/solara/implementdesign",
+      "target": "projects/solara/sitemap-update-workflow",
+      "type": "sibling",
+      "label": "solara project",
+      "description": "Both part of the solara project knowledge"
+    }
+  ]
+}
