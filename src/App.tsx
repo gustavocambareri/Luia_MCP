@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, Component } from "react";
 import type { ReactNode, ErrorInfo } from "react";
 import { KnowledgeGraph3D } from "./components/KnowledgeGraph3D";
 import { FilterBar } from "./components/FilterBar";
+import type { View } from "./components/FilterBar";
 import { useGraphData } from "./hooks/useGraphData";
 import type { GraphNode } from "./lib/types";
 
@@ -42,6 +43,7 @@ export default function App() {
   const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [activeView, setActiveView] = useState<View>("graph");
 
   const highlightedNodeIds = useMemo(() => {
     const set = new Set<string>();
@@ -64,7 +66,6 @@ export default function App() {
   const handleDeselect = useCallback(() => {
     setSelectedNode(null);
     setCopiedId(null);
-    setFilterOpen(false);
   }, [setSelectedNode]);
 
   const handleCopyFromHover = useCallback((node: GraphNode) => {
@@ -99,11 +100,17 @@ export default function App() {
         allProjects={allProjects}
         search={filters.search}
         open={filterOpen}
+        activeView={activeView}
+        selectedNode={selectedNode}
+        allNodes={filteredData.nodes}
+        allEdges={filteredData.edges}
         onToggleOpen={() => setFilterOpen(o => !o)}
+        onClose={() => setFilterOpen(false)}
         onToggleScope={toggleScope}
         onToggleProject={toggleProject}
         onSetAuthorLens={setAuthorLens}
         onSetSearch={setSearch}
+        onSetView={(view: View) => { setActiveView(view); setFilterOpen(true); }}
         nodeCount={filteredData.nodes.length}
         edgeCount={filteredData.edges.length}
       />
