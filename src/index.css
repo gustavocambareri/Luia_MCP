@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'Geist Sans';
-  src: url('/node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2') format('woff2');
+  font-family: 'Pantasia';
+  src: url('/fonts/Pantasia-Variable.woff2') format('woff2');
   font-weight: 100 900;
   font-display: swap;
 }
@@ -14,7 +14,7 @@
   --text-secondary: #8A95A3;
   --glass-bg: rgba(255, 255, 255, 0.95);
   --glass-border: rgba(0, 0, 0, 0.06);
-  --font-sans: 'Geist Sans', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Pantasia', system-ui, -apple-system, sans-serif;
 }
 
 * {
