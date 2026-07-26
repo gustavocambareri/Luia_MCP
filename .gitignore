@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local knowledge store (each team keeps their own; share via a separate repo)
+/knowledge

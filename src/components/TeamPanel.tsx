@@ -10,7 +10,6 @@ interface TeamContribution {
 
 const AUTHOR_COLORS: Record<string, string> = {
   team: "#5A7E96",
-  gustavo: "#BF5F49",
   gus: "#BF5F49",
   elena: "#B8862F",
   karl: "#5E8F64",

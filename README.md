@@ -16,17 +16,116 @@ component was built one way and not another. It ends up scattered across docs,
 threads, and people's memory, and by the time someone needs it nobody can find
 it.
 
-Luia renders that knowledge as a graph. Every document is a node. Every
-relationship is an edge — a team principle grounding a project decision, two
-pieces of work that belong together, or a method proven on one engagement and
-carried into the next. Instead of a folder tree that flattens everything into
-one hierarchy, you get the actual shape of what your team knows.
+Luia has two halves:
+
+- **An MCP server** that plugs into Claude. Designers and developers install it
+  once, and from then on Claude reads the team's conventions before answering
+  and writes new decisions back as they are made.
+- **A graph viewer** that renders the same knowledge spatially, so you can see
+  how decisions connect instead of scrolling a folder tree.
+
+Both read the same plain Markdown folder. There is no database, no backend, and
+no service to sign up for — which means a team shares its knowledge by putting
+that folder in git.
 
 <div align="center">
   <img src="docs/preview.png" alt="The Luia graph, showing team knowledge at the centre with project work fanning out around it" width="100%">
 </div>
 
-## Features
+## Install the MCP server
+
+Requires [Node.js](https://nodejs.org) 20.19+ or 22.12+.
+
+```bash
+git clone https://github.com/gustavocambareri/luia.git
+cd luia
+npm install
+```
+
+Point Claude at it. `LUIA_KNOWLEDGE_DIR` is the folder your team's Markdown
+lives in — anywhere you like:
+
+```bash
+claude mcp add luia --scope user \
+  --env LUIA_KNOWLEDGE_DIR="$HOME/luia-knowledge" \
+  -- node "$PWD/server/index.mjs"
+```
+
+Verify it connected:
+
+```bash
+claude mcp list        # luia: … - ✔ Connected
+```
+
+For Claude Desktop, add the same thing to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "luia": {
+      "command": "node",
+      "args": ["/absolute/path/to/luia/server/index.mjs"],
+      "env": { "LUIA_KNOWLEDGE_DIR": "/absolute/path/to/your-knowledge" }
+    }
+  }
+}
+```
+
+That's the whole setup. Ask Claude *"what's our spacing rule?"* and it searches
+the store before answering.
+
+### What Claude can do with it
+
+| Tool | When Claude reaches for it |
+| --- | --- |
+| `search_knowledge` | Before answering anything about how your team designs or builds — so the answer matches decisions you already made |
+| `get_document` | When a search excerpt looks relevant and it needs the full rule |
+| `record_decision` | The moment you settle a convention, so it survives the session |
+| `list_documents` | To see everything the team has written down |
+
+The two that matter are **search** and **record**. Search is described so Claude
+calls it unprompted at the start of design work — nobody remembers to ask for
+their own conventions. Record is a single call with no ceremony, because a
+capture step with friction is a capture step that doesn't happen.
+
+### Using it with your team
+
+The knowledge store is a folder of Markdown files, so sharing it is just git:
+
+```bash
+cd ~/luia-knowledge
+git init && git add . && git commit -m "Team knowledge"
+git remote add origin git@github.com:your-team/design-knowledge.git
+git push -u origin main
+```
+
+Teammates clone that repo and point their own `LUIA_KNOWLEDGE_DIR` at it. Pull
+to get everyone's decisions; push to share yours. Decisions arrive as readable
+diffs you can review like any other change.
+
+Each document is plain Markdown with frontmatter — editable by hand, no tool
+required:
+
+```markdown
+---
+title: Spacing System
+project: atlas          # optional; omit for team-wide knowledge
+author: your-name       # or 'team' for collectively-owned decisions
+tags: [spacing, layout]
+created: 2026-03-09
+---
+
+8px base unit, with a 4px step for tight UI.
+
+**Why:** the ratio between gaps carries more meaning than absolute values.
+```
+
+> [!TIP]
+> Always write the **why**. A decision without its rationale is one the team
+> relitigates in six weeks — and the rationale is what makes Claude apply the
+> rule correctly to a case you didn't anticipate.
+
+## The graph viewer
 
 - **Spatial navigation** — a 3D force-directed graph you can pan, zoom, and
   explore, with hand-composed positions so the layout reads deliberately
@@ -40,14 +139,9 @@ one hierarchy, you get the actual shape of what your team knows.
 - **Readable content** — every node carries full Markdown, a description, and a
   section outline; click any node to read it without leaving the graph.
 
-## Getting started
-
-Requires [Node.js](https://nodejs.org) 20.19+ or 22.12+ (Vite 8).
+### Running the viewer
 
 ```bash
-git clone https://github.com/gustavocambareri/luia.git
-cd luia
-npm install
 npm run dev
 ```
 
@@ -65,11 +159,10 @@ npm run lint      # eslint
 > Harbor, and Verso are invented engagements, and every person credited in them
 > is made up. Nothing here is real client work.
 
-## Using it with your team
+### Viewer data format
 
-All content lives in one file: `src/data/graph-data.json`. Replace it with your
-own and the app is yours — there is no database, no backend, and no service to
-sign up for.
+The viewer reads `src/data/graph-data.json`. Replace it with your own and the
+app is yours.
 
 A node looks like this:
 
@@ -80,7 +173,7 @@ A node looks like this:
   "slug": "block-library",
   "scope": "project",
   "project": "atlas",
-  "author": "Gus",
+  "author": "your-name",
   "tags": ["atlas", "blocks", "templates"],
   "created": "Mon Mar 16 2026 01:00:00 GM",
   "fileSize": 8200,
@@ -152,8 +245,12 @@ A few choices are deliberate and worth knowing before you extend it:
 ## Project structure
 
 ```
-src/
-├── data/graph-data.json      # all content — replace this with yours
+server/                       # the MCP server
+├── index.mjs                 # tool definitions + stdio transport
+└── knowledge.mjs             # Markdown store: read, write, search
+
+src/                          # the graph viewer
+├── data/graph-data.json      # demo content — replace this with yours
 ├── lib/
 │   ├── types.ts              # GraphNode, GraphEdge, GraphData
 │   └── colors.ts             # palette, scope/project/author colour maps
