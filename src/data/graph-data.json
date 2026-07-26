@@ -1,0 +1,1192 @@
+{
+  "nodes": [
+    {
+      "id": "_team/convictions",
+      "name": "Team Design Convictions",
+      "slug": "convictions",
+      "scope": "team",
+      "author": "team",
+      "tags": [
+        "team",
+        "convictions",
+        "principles"
+      ],
+      "created": "Mon Mar 09 2026 01:00:00 GM",
+      "fileSize": 17765,
+      "description": "The studio's non-negotiable design principles: system-first construction, tokens as contracts, motion described alongside every static frame, and accessibility treated as a design constraint.",
+      "body": "# Team Design Convictions\n\nOur non-negotiable principles. They apply in the design tool, in code, and in how we brief an AI assistant.\n\n---\n\n## A static frame is only half a design\n\nEvery frame is a brief for its living counterpart. If a comp does not imply how it moves, it is incomplete. Motion notes carry real spring constants, ARIA roles, and state descriptions, and they live in annotation frames beside the design rather than inside it.\n\n## We never rebuild what the system already provides\n\nThe atomic hierarchy runs fundamentals to components to blocks to templates. Instantiating an existing component is the default build method. Recreating a button from raw rectangles and text is a signal that something upstream is missing.\n\nSee: [[design-system-patterns]]\n\n## A design with placeholders is not a design\n\nNo grey boxes, no lorem ipsum, no stand-in icons. Real copy and real images, or we cannot honestly judge hierarchy, visual weight, or tone.\n\n## Tokens are the contract between design and engineering\n\nWe do not eyeball colour or round spacing to something convenient. If the design says a token, the code says the same token. Values flow from the design file into CSS custom properties without reinterpretation.\n\nSee: [[design-system-patterns]]\n\n## Small screens are a different medium, not a smaller canvas\n\nTouch, scroll, divided attention, one hand. We classify each section as a simple reflow or a genuine pattern rethink. Reflowing is the cheap path. Rethinking is where the design value actually sits.\n\n## Accessibility is a design constraint\n\nWe pick patterns partly on how well they survive keyboard and screen reader use. If we cannot describe the focus order, the pattern is not finished.\n\n## We write down the reasoning, not just the outcome\n\nA decision without its rationale is a decision the team relitigates in six weeks. Capture the constraint that forced the call.\n\nSee: [[workflows]]\n",
+      "sections": [
+        "Team Design Convictions",
+        "A static frame is only half a design",
+        "We never rebuild what the system already provides",
+        "A design with placeholders is not a design",
+        "Tokens are the contract between design and engineering",
+        "Small screens are a different medium, not a smaller canvas",
+        "Accessibility is a design constraint",
+        "We write down the reasoning, not just the outcome"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "_team/workflows",
+        "projects/meridian/mobile-patterns",
+        "projects/meridian/desktop-to-mobile",
+        "projects/lumen/scroll-reference",
+        "projects/cadence/motion-language",
+        "projects/cadence/interaction-audit",
+        "projects/harbor/research-synthesis",
+        "projects/verso/art-direction-notes"
+      ]
+    },
+    {
+      "id": "_team/design-system-patterns",
+      "name": "Design System Patterns",
+      "slug": "design-system-patterns",
+      "scope": "team",
+      "author": "team",
+      "tags": [
+        "team",
+        "design-system",
+        "tokens",
+        "patterns"
+      ],
+      "created": "Mon Mar 09 2026 01:00:00 GM",
+      "fileSize": 19131,
+      "description": "Shared atomic hierarchy, layout rules, type scaling, spacing system, and the Gestalt principles the studio applies across every engagement.",
+      "body": "# Design System Patterns\n\nShared patterns for building and maintaining design systems across engagements.\n\n---\n\n## Atomic Hierarchy\n\n```\nFundamentals (colour, type, spacing, icons)\n  -> Components (button, card, input, tag)\n    -> Blocks (hero, carousel, accordion, CTA)\n      -> Templates (pages assembled from blocks)\n```\n\nSee: [[convictions]] regarding never rebuilding what the system provides.\n\n## Layout Rules\n\n- Auto layout everywhere. Absolute positioning only where elements genuinely overlap.\n- Content containers fill their parent rather than hugging, unless the design calls for a shrink-to-fit chip.\n- Set every property explicitly. Inherited defaults are invisible decisions.\n- Name layers semantically. PascalCase for components, kebab-case with a modifier suffix for states.\n\n## Type Scaling\n\n| Level | Small screen | Rules |\n|-------|--------------|-------|\n| Headline | 60 to 70 percent of large-screen size, minimum 24px | Line height 1.15 to 1.2, tighten tracking on display sizes |\n| Subhead | 65 to 75 percent, minimum 18px | Keep the contrast with body legible |\n| Body | 15 to 17px, never below 14px | Line height 1.4 to 1.55 |\n| Caption | 12 to 13px | Line height 1.3 to 1.4 |\n\n## Spacing\n\n| Context | Small screen | Rule |\n|---------|--------------|------|\n| Horizontal padding | 20 to 24px edge inset | Hard minimum |\n| Touch target | 44px minimum height | Hard minimum |\n| Section gap | Compress proportionally | The ratio between gaps matters more than absolute values |\n\n## Gestalt In Practice\n\n- **Proximity**: tighten related groups further on small screens, and increase separation between unrelated ones.\n- **Similarity**: identical styling for elements that do the same job. Divergent styling is a claim of difference.\n- **Continuity**: a scannable edge beats decorative alignment.\n- **Closure**: a peeking card edge tells the user there is more without needing an arrow.\n\n## Token Naming\n\nSemantic over literal. A token named for its role survives a rebrand, one named for its colour does not.\n",
+      "sections": [
+        "Design System Patterns",
+        "Atomic Hierarchy",
+        "Layout Rules",
+        "Type Scaling",
+        "Spacing",
+        "Gestalt In Practice",
+        "Token Naming"
+      ],
+      "connections": [
+        "_team/convictions",
+        "_team/workflows",
+        "projects/meridian/ux-architecture",
+        "projects/meridian/archive-block-redesign",
+        "projects/lumen/design-system",
+        "projects/atlas/sitemap",
+        "projects/atlas/block-library",
+        "projects/cadence/component-states",
+        "projects/harbor/information-architecture",
+        "projects/verso/brand-expression",
+        "projects/verso/editorial-grid"
+      ]
+    },
+    {
+      "id": "_team/workflows",
+      "name": "Team Workflows",
+      "slug": "workflows",
+      "scope": "team",
+      "author": "team",
+      "tags": [
+        "team",
+        "workflows",
+        "process",
+        "handoff"
+      ],
+      "created": "Mon Mar 09 2026 01:00:00 GM",
+      "fileSize": 13005,
+      "description": "Standard operating workflows: design-tool build loops, extraction to code, visual validation, and the review gates between them.",
+      "body": "# Team Workflows\n\nHow we run work end to end.\n\n---\n\n## Building In The Design Tool\n\n| Step | Purpose |\n|------|---------|\n| 1 | Inventory what already exists before building anything |\n| 2 | Read the selected structure: layout, hierarchy, properties |\n| 3 | Capture a screenshot as the visual source of truth |\n| 4 | Inspect component properties, variants, and states |\n| 5 | Pull exact colour, type, and spacing tokens |\n| 6 | Build by instantiating existing components |\n| 7 | Validate against the screenshot, iterating up to three times |\n\nSee: [[convictions]] regarding never rebuilding what the system provides.\n\n## Extracting To Code\n\n1. Read the selection and screenshot it together, so structure and intent arrive at once.\n2. Pull component details and computed styles before writing any markup.\n3. Map every value to an existing token. An unmapped value is a question for the design owner, not a rounding opportunity.\n4. Rebuild with production components.\n5. Compare rendered output against the screenshot and iterate.\n\n## Visual Validation Loop\n\nCreate, screenshot, compare, correct. Cap at three passes. If it has not converged by the third, the underlying spec is ambiguous and the fix belongs upstream.\n\n## Review Gates\n\n- **Gate 1, structure**: hierarchy and semantics before any styling.\n- **Gate 2, tokens**: no literal values remaining.\n- **Gate 3, motion and state**: hover, focus, active, empty, loading, error.\n- **Gate 4, accessibility**: keyboard path, focus order, contrast.\n\nSee: [[design-system-patterns]]\n",
+      "sections": [
+        "Team Workflows",
+        "Building In The Design Tool",
+        "Extracting To Code",
+        "Visual Validation Loop",
+        "Review Gates"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "_team/convictions",
+        "projects/lumen/implementation-plan",
+        "projects/lumen/extraction-notes",
+        "projects/atlas/implement-from-design",
+        "projects/atlas/sync-workflow",
+        "projects/harbor/usability-testing"
+      ]
+    },
+    {
+      "id": "projects/meridian/ux-architecture",
+      "name": "Meridian — UX Architecture & Component Map",
+      "slug": "ux-architecture",
+      "scope": "project",
+      "project": "meridian",
+      "author": "Gus",
+      "tags": [
+        "meridian",
+        "architecture",
+        "sitemap",
+        "components"
+      ],
+      "created": "Mon Mar 09 2026 01:00:00 GM",
+      "fileSize": 19500,
+      "description": "Full component map and UX architecture for the Meridian archive site, documenting every block, template, and token in the system.",
+      "body": "# Meridian — UX Architecture & Component Map\n\n> Fictional reference project used to demonstrate Luia. Not a real engagement.\n\n---\n\n## Sources Of Truth\n\n| Source | Contains |\n|--------|----------|\n| Design file, page tree | All page designs, states, viewport annotations |\n| Design file, sitemap | Structure with page purposes and block assignments |\n| Component library | Reusable blocks and fundamentals |\n\n## Site Structure\n\n```\nHome\n├── Explore\n│   ├── Exhibitions overview\n│   │   ├── Exhibition detail\n│   │   └── Programme detail\n│   ├── Calendar\n│   └── Past exhibitions\n├── Plan Your Visit\n│   ├── Tickets and opening hours\n│   ├── Accessibility\n│   ├── Families\n│   └── Groups and schools\n├── Archive\n│   ├── Archive overview (dark theme)\n│   │   ├── Archive item detail\n│   │   └── Contributor detail\n│   └── Stories\n└── About\n    ├── Organisation\n    ├── Press\n    └── Contact\n```\n\n## Page Templates\n\n### Home\n- **Theme**: light sand background\n- **Blocks**: hero, featured exhibition, programme highlights, top tasks, large visual with CTA, archive highlight, footer\n\n### Exhibitions Overview\n- **Blocks**: anchor links (current, permanent, upcoming), featured highlight, card grid, top tasks, footer\n\n### Exhibition Detail\n- **Theme**: per-exhibition accent, CMS driven\n- **Blocks**: themed hero, date block, long-form text and media, image block, expandable sections, cross-sell, FAQ accordion, footer\n- **Key interaction**: a plus control expands inline content in place rather than navigating away\n\n### Archive Overview\n- **Theme**: near-black\n- **Blocks**: filter pills, masonry card grid, pagination, footer\n\n### Archive Item\n- **Layout**: split, large media left, metadata panel right\n- **Blocks**: expandable metadata sections, related items, footer\n\n## Notes\n\nThe archive templates invert to a dark theme so the objects themselves carry the colour. Every other template stays light.\n",
+      "sections": [
+        "Meridian — UX Architecture & Component Map",
+        "Sources Of Truth",
+        "Site Structure",
+        "Page Templates",
+        "Home",
+        "Exhibitions Overview",
+        "Exhibition Detail",
+        "Archive Overview",
+        "Archive Item",
+        "Notes"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "projects/meridian/mobile-patterns",
+        "projects/meridian/desktop-to-mobile",
+        "projects/verso/art-direction-notes"
+      ]
+    },
+    {
+      "id": "projects/meridian/mobile-patterns",
+      "name": "Mobile Pattern Advisor",
+      "slug": "mobile-patterns",
+      "scope": "project",
+      "project": "meridian",
+      "author": "Gus",
+      "tags": [
+        "meridian",
+        "mobile",
+        "patterns",
+        "interaction"
+      ],
+      "created": "Mon Mar 09 2026 01:00:00 GM",
+      "fileSize": 11763,
+      "description": "Analyses large-screen blocks and proposes small-screen interaction patterns: carousels, accordions, and gestures, with the motion described up front.",
+      "body": "# Mobile Pattern Advisor\n\nA reusable brief for translating large-screen blocks to small screens.\n\n---\n\n## Role\n\nA senior interaction designer who also ships front-end code, so the proposal is always something that can actually be built.\n\n## Task\n\nAnalyse the selected block, identify opportunities on small screens, propose an interaction pattern, and once a direction is approved, build it.\n\nThis is not a pixel-for-pixel translator. It reimagines how content should behave on a small, touch-driven, scroll-driven screen while staying faithful to the visual identity.\n\n## Stack Context\n\n- **Design system**: atomic, fundamentals to components to blocks to templates\n- **Front end**: component framework with a dedicated animation library\n- **Key insight**: the design tool is static, the product is not. Describe motion, timing, and interaction states, because those are what make the built result feel designed.\n\n## Workflow\n\n### Phase 1, analysis\nRead the current selection, screenshot the full composition, and inspect the structure before forming an opinion.\n\n### Phase 2, proposal\nOffer two or three viable patterns with an honest tradeoff for each. Name the one you would ship and say why.\n\n### Phase 3, build\nConstruct with existing components, real content, and exact tokens.\n\n### Phase 4, validation\nScreenshot, compare, correct. Three passes maximum.\n\nSee: [[convictions]] regarding small screens as a different medium.\n",
+      "sections": [
+        "Mobile Pattern Advisor",
+        "Role",
+        "Task",
+        "Stack Context",
+        "Workflow",
+        "Phase 1, analysis",
+        "Phase 2, proposal",
+        "Phase 3, build",
+        "Phase 4, validation"
+      ],
+      "connections": [
+        "_team/convictions",
+        "projects/meridian/ux-architecture",
+        "projects/meridian/archive-block-redesign",
+        "projects/lumen/scroll-reference",
+        "projects/cadence/motion-language"
+      ]
+    },
+    {
+      "id": "projects/meridian/archive-block-redesign",
+      "name": "Archive Block — Editorial Hybrid Redesign",
+      "slug": "archive-block-redesign",
+      "scope": "project",
+      "project": "meridian",
+      "author": "Gus",
+      "tags": [
+        "meridian",
+        "redesign",
+        "editorial",
+        "carousel"
+      ],
+      "created": "Mon Mar 09 2026 01:00:00 GM",
+      "fileSize": 11160,
+      "description": "Redesigns the archive highlight block from a flat equal-width carousel into an editorial hybrid that keeps the catalogue feel on small screens.",
+      "body": "# Archive Block — Editorial Hybrid Redesign\n\n## Context\n\nThe large-screen highlight block has a deliberately editorial layout: three objects at different sizes, asymmetrically placed, reading like a catalogue spread. The small-screen version flattens this into a generic equal-width carousel and loses the character entirely.\n\n**Goal**: rebuild as a hybrid. One large lead object, then a peek-style carousel for the rest.\n\n---\n\n## Phase A, build\n\n1. Create a working section for the exploration.\n2. Build the small-screen frame at 375px wide, vertical auto layout, 20px horizontal padding, 60px vertical, 80px between major sections.\n3. Title block, display size, with the ornament beneath.\n4. Lead object, full-bleed media container, title and attribution below.\n5. Carousel, horizontal auto layout with the next card edge deliberately visible.\n\n## Phase B, implementation\n\n- Scroll snap on the carousel track, with snap alignment at the start.\n- The visible next-card edge is the affordance. No arrows on small screens.\n- Momentum scrolling with a rubber-band stop at the last item.\n- Respect reduced-motion by disabling the parallax on the lead object.\n\n## Rationale\n\nThe peek pattern communicates \"there is more\" without adding UI. The lead object preserves the editorial hierarchy that the flat carousel destroyed.\n\nSee: [[design-system-patterns]] regarding Gestalt closure.\n",
+      "sections": [
+        "Archive Block — Editorial Hybrid Redesign",
+        "Context",
+        "Phase A, build",
+        "Phase B, implementation",
+        "Rationale"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "projects/meridian/mobile-patterns",
+        "projects/meridian/desktop-to-mobile",
+        "projects/verso/editorial-grid"
+      ]
+    },
+    {
+      "id": "projects/meridian/desktop-to-mobile",
+      "name": "Large To Small — Unified Translation",
+      "slug": "desktop-to-mobile",
+      "scope": "project",
+      "project": "meridian",
+      "author": "Gus",
+      "tags": [
+        "meridian",
+        "responsive",
+        "translation",
+        "process"
+      ],
+      "created": "Mon Mar 09 2026 01:00:00 GM",
+      "fileSize": 8147,
+      "description": "Translates large-screen blocks into small-screen versions, classifying each section as a simple reflow or a pattern rethink before any work starts.",
+      "body": "# Large To Small — Unified Translation\n\n## Role\n\nA visual designer and front-end architect working in a systematic tradition, attentive to optical correction and to how patterns behave under the thumb.\n\n## Task\n\nTranslate the provided blocks into small-screen versions. Section by section, decide whether to faithfully reflow or to propose a new pattern.\n\n---\n\n## Mode A, faithful reflow\n\nThe content structure survives the size change. Stack, rescale type, compress gaps, done. Most text-led sections land here.\n\n## Mode B, pattern rethink\n\nThe structure itself stops working. A wide comparison table, a multi-column feature grid, or an editorial composition needs a different interaction, not a narrower version of the same one.\n\n## Deciding Between Them\n\nAsk what the section is for. If the job survives stacking, reflow. If the job depends on seeing several things at once, rethink.\n\n## Checklist\n\n- Touch targets at 44px minimum\n- Edge inset of 20 to 24px\n- Type scaled per the shared ramp, never below the floor\n- Motion described for every new pattern\n- Focus order verified after restructuring\n\nSee: [[design-system-patterns]]\n",
+      "sections": [
+        "Large To Small — Unified Translation",
+        "Role",
+        "Task",
+        "Mode A, faithful reflow",
+        "Mode B, pattern rethink",
+        "Deciding Between Them",
+        "Checklist"
+      ],
+      "connections": [
+        "_team/convictions",
+        "projects/meridian/archive-block-redesign",
+        "projects/meridian/ux-architecture"
+      ]
+    },
+    {
+      "id": "projects/lumen/design-system",
+      "name": "Design System Rules — Lumen",
+      "slug": "design-system",
+      "scope": "project",
+      "project": "lumen",
+      "author": "Gus",
+      "tags": [
+        "lumen",
+        "design-system",
+        "tokens",
+        "typography"
+      ],
+      "created": "Thu Mar 12 2026 01:00:00 GM",
+      "fileSize": 11591,
+      "description": "Complete design system rules for the Lumen marketing site: colour, typography, spacing, grid, and component specifications.",
+      "body": "# Design System Rules — Lumen\n\n> Fictional reference project used to demonstrate Luia. Not a real engagement.\n\n---\n\n## Colour\n\n| Token | Usage |\n|---|---|\n| `surface-base` | Page background |\n| `surface-raised` | Cards, panels |\n| `border-subtle` | Dividers, muted UI |\n| `text-secondary` | Supporting copy |\n| `text-primary` | Primary text, dark surfaces |\n| `brand-mark` | Logo only, never as text colour |\n| `brand-accent` | Accent text and highlights |\n| `campaign-warm` | Campaign accent, warm sand |\n| `campaign-cool` | Campaign accent, steel blue |\n| `campaign-neutral` | Campaign accent, neutral grey |\n\nSemantic naming throughout, so a palette change never requires renaming a token.\n\n## Typography\n\nA two-family system: a primary sans across five weights for headlines, UI, and body, and an editorial serif reserved for pull quotes.\n\n| Role | Family |\n|---|---|\n| Headlines, UI, body, labels | Primary sans |\n| Quotes, editorial callouts | Editorial serif |\n\nThe serif is deliberately scarce. Once it appears more than once per page it stops signalling anything.\n\n## Spacing And Grid\n\n- 12-column grid on large screens, 4-column on small\n- 8px base spacing unit, with a 4px step available for tight UI\n- Gutters scale with the viewport, margins do not\n\n## Components\n\nEach spec records the anatomy, the variants, the states, and the motion. A component without documented states is considered incomplete.\n",
+      "sections": [
+        "Design System Rules — Lumen",
+        "Colour",
+        "Typography",
+        "Spacing And Grid",
+        "Components"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "projects/lumen/scroll-reference",
+        "projects/lumen/extraction-notes",
+        "projects/atlas/block-library",
+        "projects/verso/brand-expression"
+      ]
+    },
+    {
+      "id": "projects/lumen/scroll-reference",
+      "name": "Scroll Features Reference",
+      "slug": "scroll-reference",
+      "scope": "project",
+      "project": "lumen",
+      "author": "Gus",
+      "tags": [
+        "lumen",
+        "scroll",
+        "motion",
+        "animation"
+      ],
+      "created": "Thu Mar 12 2026 01:00:00 GM",
+      "fileSize": 7925,
+      "description": "Reference for the scroll animation patterns used on the site: horizontal sequences, parallax layers, and pinned sections.",
+      "body": "# Scroll Features Reference\n\nPatterns available in the scroll system, and when each earns its place.\n\n---\n\n## Horizontal Sequence\n\nA pinned section translates horizontally as the user scrolls vertically. Suited to a linear narrative with a small number of stops.\n\n**Cost**: it hijacks the scroll expectation. Use once per page at most.\n\n## Parallax Layers\n\nBackground and foreground move at different rates. Effective for depth on a hero, distracting anywhere near body copy.\n\n**Rule**: never parallax anything the user is trying to read.\n\n## Pinned Sections\n\nAn element holds position while its content advances. Good for step-through explanations.\n\n**Rule**: always provide a visible progress indicator, otherwise the pin reads as a broken page.\n\n## Reveal On Enter\n\nElements fade and rise slightly as they enter the viewport. The default. Keep the distance short, around 12 to 20px, and the duration under 400ms.\n\n## Reduced Motion\n\nEvery pattern above degrades to an instant state change under a reduced-motion preference. This is not optional.\n\nSee: [[convictions]] regarding accessibility as a design constraint.\n",
+      "sections": [
+        "Scroll Features Reference",
+        "Horizontal Sequence",
+        "Parallax Layers",
+        "Pinned Sections",
+        "Reveal On Enter",
+        "Reduced Motion"
+      ],
+      "connections": [
+        "_team/convictions",
+        "projects/lumen/design-system",
+        "projects/lumen/implementation-plan",
+        "projects/meridian/mobile-patterns",
+        "projects/cadence/motion-language"
+      ]
+    },
+    {
+      "id": "projects/lumen/implementation-plan",
+      "name": "Implementation Plan — Lumen Site",
+      "slug": "implementation-plan",
+      "scope": "project",
+      "project": "lumen",
+      "author": "Gus",
+      "tags": [
+        "lumen",
+        "implementation",
+        "plan",
+        "engineering"
+      ],
+      "created": "Thu Mar 12 2026 01:00:00 GM",
+      "fileSize": 8885,
+      "description": "Technical implementation plan covering smooth scroll, the animation layer, and the build order for the marketing site.",
+      "body": "# Implementation Plan — Lumen Site\n\n## Architecture\n\nA component framework with file-based routing, a smooth-scroll layer, and a timeline-based animation library driving scroll-linked motion.\n\n## Build Order\n\n1. **Tokens first.** Colour, type, spacing as CSS custom properties, generated from the design file. Nothing else starts until these land.\n2. **Primitives.** Button, link, tag, input. Fully stated, fully accessible.\n3. **Blocks.** Hero, feature row, quote, gallery, CTA, footer.\n4. **Templates.** Pages assembled from blocks, no bespoke layout code.\n5. **Motion.** Applied last, as a layer over a site that already works without it.\n\n## Why Motion Comes Last\n\nA site whose content depends on animation to be legible is broken for anyone who never sees the animation. Build it static, then enhance.\n\n## Performance Budget\n\n- Largest contentful paint under 2.5s on a mid-tier device\n- No layout shift from late-loading media, so every image ships with dimensions\n- Animation confined to transform and opacity\n\n## Risks\n\nThe horizontal sequence is the highest-risk element. It needs a fallback for narrow viewports and a tested keyboard path before it can ship.\n\nSee: [[scroll-reference]]\n",
+      "sections": [
+        "Implementation Plan — Lumen Site",
+        "Architecture",
+        "Build Order",
+        "Why Motion Comes Last",
+        "Performance Budget",
+        "Risks"
+      ],
+      "connections": [
+        "_team/workflows",
+        "projects/lumen/scroll-reference",
+        "projects/lumen/extraction-notes"
+      ]
+    },
+    {
+      "id": "projects/lumen/extraction-notes",
+      "name": "Extraction Notes — Frames vs Components",
+      "slug": "extraction-notes",
+      "scope": "project",
+      "project": "lumen",
+      "author": "Gus",
+      "tags": [
+        "lumen",
+        "extraction",
+        "tooling",
+        "components"
+      ],
+      "created": "Thu Mar 12 2026 01:00:00 GM",
+      "fileSize": 4617,
+      "description": "Documents how selecting a frame versus a component changes extraction quality, and what that means for typed props and reuse.",
+      "body": "# Extraction Notes — Frames vs Components\n\n## The Difference\n\nSelecting a **frame** yields a flat snapshot. Correct visually, but every value is literal and nothing is reusable.\n\nSelecting a **component** yields structure. Properties become typed props, variants become a union, and the extracted result is something that can actually live in a codebase.\n\n## Practical Consequence\n\nExtract from components wherever they exist. If a design was built from raw frames, the extraction will be technically accurate and architecturally useless.\n\nThis is a strong argument for enforcing component usage during design, not after.\n\n## What Still Needs A Human\n\n- Naming. Generated names describe appearance, not purpose.\n- Responsive intent. A single extraction captures one viewport.\n- Motion. Never present in a static extraction.\n\nSee: [[design-system]]\n",
+      "sections": [
+        "Extraction Notes — Frames vs Components",
+        "The Difference",
+        "Practical Consequence",
+        "What Still Needs A Human"
+      ],
+      "connections": [
+        "_team/workflows",
+        "projects/lumen/implementation-plan",
+        "projects/lumen/design-system",
+        "projects/atlas/implement-from-design"
+      ]
+    },
+    {
+      "id": "projects/atlas/sitemap",
+      "name": "Atlas — Sitemap & Templates",
+      "slug": "sitemap",
+      "scope": "project",
+      "project": "atlas",
+      "author": "Gus",
+      "tags": [
+        "atlas",
+        "sitemap",
+        "templates",
+        "structure"
+      ],
+      "created": "Mon Mar 16 2026 01:00:00 GM",
+      "fileSize": 7975,
+      "description": "Full sitemap and page template mapping for Atlas: site structure, content types, and which blocks compose each page.",
+      "body": "# Atlas — Sitemap & Templates\n\n> Fictional reference project used to demonstrate Luia. Not a real engagement.\n\n---\n\n## Structure\n\n```\nHome\n├── Services\n│   └── Service detail\n├── Work\n│   └── Case study detail\n├── Insights\n│   ├── Article\n│   └── Report\n├── About\n│   ├── Team\n│   └── Careers\n│       └── Role detail\n└── Contact\n```\n\n## Template Map\n\n| Template | Blocks |\n|---|---|\n| Home | Hero, service summary, featured work, insight teaser, CTA, footer |\n| Service detail | Hero, capability list, process steps, related work, CTA, footer |\n| Case study | Hero, context, approach, outcome, media gallery, next project, footer |\n| Insights index | Filter bar, article grid, pagination, footer |\n| Article | Article hero, long-form body, pull quote, author, related, footer |\n| Careers | Hero, values, open roles list, footer |\n| Role detail | Role summary, responsibilities, application CTA, footer |\n\n## Content Types\n\nEach type declares its required fields up front, so an editor cannot publish a card without the image it needs.\n",
+      "sections": [
+        "Atlas — Sitemap & Templates",
+        "Structure",
+        "Template Map",
+        "Content Types"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "projects/atlas/block-library",
+        "projects/atlas/sync-workflow",
+        "projects/harbor/information-architecture"
+      ]
+    },
+    {
+      "id": "projects/atlas/block-library",
+      "name": "New Design Templates — Atlas",
+      "slug": "block-library",
+      "scope": "project",
+      "project": "atlas",
+      "author": "Gus",
+      "tags": [
+        "atlas",
+        "blocks",
+        "templates",
+        "library"
+      ],
+      "created": "Mon Mar 16 2026 01:00:00 GM",
+      "fileSize": 6302,
+      "description": "Reusable block library and page templates for the Atlas redesign: navigation, hero, content blocks, forms, and footers.",
+      "body": "# New Design Templates — Atlas\n\n## Block Library\n\n### Navigation\nSticky header that compresses on scroll. A flyout panel on large screens, a full-screen overlay on small.\n\n### Hero\nThree variants: display (home), compact (interior), and media-led (case study). One variant per template, no mixing.\n\n### Content Blocks\n- Text and media, alternating alignment\n- Pull quote with optional attribution\n- Statistic row, two to four items\n- Accordion for progressive disclosure\n- Logo strip\n- Card grid, two or three across\n\n### Forms\nSingle-column always. Labels above fields. Inline validation on blur rather than on keystroke. Errors state what to do, not what went wrong.\n\n### Footer\nFour-column on large screens collapsing to stacked groups, with the utility row last.\n\n## Composition Rules\n\nTemplates are assembled from blocks, never from bespoke layout. If a page needs something the library lacks, that is a request for a new block, not an exception.\n\nSee: [[design-system-patterns]]\n",
+      "sections": [
+        "New Design Templates — Atlas",
+        "Block Library",
+        "Navigation",
+        "Hero",
+        "Content Blocks",
+        "Forms",
+        "Footer",
+        "Composition Rules"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "projects/atlas/sitemap",
+        "projects/atlas/implement-from-design",
+        "projects/lumen/design-system",
+        "projects/cadence/component-states"
+      ]
+    },
+    {
+      "id": "projects/atlas/implement-from-design",
+      "name": "Implement From Design",
+      "slug": "implement-from-design",
+      "scope": "project",
+      "project": "atlas",
+      "author": "Gus",
+      "tags": [
+        "atlas",
+        "implementation",
+        "parity",
+        "workflow"
+      ],
+      "created": "Mon Mar 16 2026 01:00:00 GM",
+      "fileSize": 5970,
+      "description": "Translates designs into production-ready code with close visual parity, using structured extraction and screenshot validation.",
+      "body": "# Implement From Design\n\n## Goal\n\nProduction code that matches the design closely enough that a reviewer stops looking for differences.\n\n## Process\n\n1. **Read the design.** Structure and screenshot together.\n2. **Map to the system.** Every colour, size, and space resolves to an existing token. Unmapped values are questions, not decisions.\n3. **Build with primitives.** Existing components first.\n4. **Compare.** Render, screenshot, diff against the source.\n5. **Correct.** Up to three passes.\n\n## What Parity Means\n\nNot identical pixels on one viewport. It means the same hierarchy, the same rhythm, and the same optical weight across the range of real viewports.\n\n## Common Failure Modes\n\n- Rounding spacing to convenient numbers, which quietly destroys rhythm\n- Substituting a similar font weight because the exact one was not loaded\n- Ignoring optical alignment on icons next to text\n- Shipping without hover, focus, and active states\n\nSee: [[workflows]]\n",
+      "sections": [
+        "Implement From Design",
+        "Goal",
+        "Process",
+        "What Parity Means",
+        "Common Failure Modes"
+      ],
+      "connections": [
+        "_team/workflows",
+        "projects/atlas/block-library",
+        "projects/atlas/sync-workflow",
+        "projects/lumen/extraction-notes",
+        "projects/harbor/usability-testing"
+      ]
+    },
+    {
+      "id": "projects/atlas/sync-workflow",
+      "name": "Sitemap Sync Workflow",
+      "slug": "sync-workflow",
+      "scope": "project",
+      "project": "atlas",
+      "author": "Gus",
+      "tags": [
+        "atlas",
+        "automation",
+        "workflow",
+        "sync"
+      ],
+      "created": "Mon Mar 16 2026 01:00:00 GM",
+      "fileSize": 2600,
+      "description": "Automated workflow that keeps the sitemap in step with the design system whenever blocks or fundamentals change.",
+      "body": "# Sitemap Sync Workflow\n\n## Trigger\n\nAny change to a block, a template, or a fundamental in the design system.\n\n## Steps\n\n1. Detect which blocks changed.\n2. Find every template that composes those blocks.\n3. Flag affected pages in the sitemap.\n4. Emit a short diff describing what changed and which pages inherit it.\n\n## Why\n\nDesign systems drift silently. A block gains a variant, three templates inherit behaviour nobody reviewed, and the sitemap documentation quietly becomes fiction. This closes that loop.\n\n## Output\n\nA change summary listing the block, the change, the affected templates, and the pages needing review. Short enough that people actually read it.\n\nSee: [[sitemap]]\n",
+      "sections": [
+        "Sitemap Sync Workflow",
+        "Trigger",
+        "Steps",
+        "Why",
+        "Output"
+      ],
+      "connections": [
+        "_team/workflows",
+        "projects/atlas/implement-from-design",
+        "projects/atlas/sitemap"
+      ]
+    },
+    {
+      "id": "projects/cadence/motion-language",
+      "name": "Cadence — Motion Language",
+      "slug": "motion-language",
+      "scope": "project",
+      "project": "cadence",
+      "author": "Elena",
+      "tags": [
+        "cadence",
+        "motion",
+        "easing",
+        "system"
+      ],
+      "created": "Thu Mar 19 2026 01:00:00 GM",
+      "fileSize": 11037,
+      "description": "Defines the product's motion language: duration bands, easing curves, and the meaning each transition is intended to carry.",
+      "body": "# Cadence — Motion Language\n\n> Fictional reference project used to demonstrate Luia. Not a real engagement.\n\n---\n\n## Principle\n\nMotion carries meaning or it does not ship. Every transition answers one question: what just happened, and where did it come from?\n\n## Duration Bands\n\n| Band | Range | Used for |\n|---|---|---|\n| Instant | 0 to 100ms | State feedback, hover, active |\n| Quick | 120 to 200ms | Small local changes, toggles, tooltips |\n| Standard | 220 to 320ms | Panels, dropdowns, most UI motion |\n| Deliberate | 350 to 500ms | Full-screen changes, route transitions |\n\nAnything past 500ms needs a reason written down.\n\n## Easing\n\n- **Standard ease-out** for entrances. Fast start, soft landing.\n- **Ease-in** for exits, because leaving should not demand attention.\n- **Spring** reserved for direct manipulation, where the user's gesture is driving.\n\nLinear easing is reserved for continuous loops such as a progress spinner.\n\n## Choreography\n\nWhen several elements move together, stagger by 20 to 40ms in reading order. Simultaneous motion on more than three elements reads as a glitch rather than a sequence.\n\n## Reduced Motion\n\nUnder a reduced-motion preference, transforms become opacity changes and durations collapse toward instant. The information is preserved, the movement is not.\n\nSee: [[convictions]] regarding accessibility as a design constraint.\n",
+      "sections": [
+        "Cadence — Motion Language",
+        "Principle",
+        "Duration Bands",
+        "Easing",
+        "Choreography",
+        "Reduced Motion"
+      ],
+      "connections": [
+        "_team/convictions",
+        "projects/cadence/component-states",
+        "projects/cadence/interaction-audit",
+        "projects/lumen/scroll-reference",
+        "projects/meridian/mobile-patterns"
+      ]
+    },
+    {
+      "id": "projects/cadence/component-states",
+      "name": "Component State Matrix",
+      "slug": "component-states",
+      "scope": "project",
+      "project": "cadence",
+      "author": "Elena",
+      "tags": [
+        "cadence",
+        "components",
+        "states",
+        "specification"
+      ],
+      "created": "Thu Mar 19 2026 01:00:00 GM",
+      "fileSize": 5687,
+      "description": "The complete state matrix every interactive component must satisfy before it is considered done.",
+      "body": "# Component State Matrix\n\n## Required States\n\nEvery interactive component documents all of these before review:\n\n| State | Requirement |\n|---|---|\n| Default | The resting appearance |\n| Hover | Pointer only, never the sole affordance |\n| Focus | Visible ring, meets contrast against both adjacent surfaces |\n| Active | Momentary, confirms the press landed |\n| Disabled | Visibly inert, and explained nearby |\n| Loading | Preserves layout, no collapse or jump |\n| Error | Says what to do next |\n| Empty | For containers, a genuine first-run state |\n\n## The Common Gap\n\nEmpty and loading states are the ones most often skipped, and the ones users hit first on a slow connection or a fresh account. A component missing them is not finished.\n\n## Focus Rings\n\nThe ring must clear both the component surface and the page background. A ring that only passes contrast on one of the two fails in the real layout.\n\nSee: [[design-system-patterns]]\n",
+      "sections": [
+        "Component State Matrix",
+        "Required States",
+        "The Common Gap",
+        "Focus Rings"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "projects/cadence/motion-language",
+        "projects/cadence/interaction-audit",
+        "projects/atlas/block-library"
+      ]
+    },
+    {
+      "id": "projects/cadence/interaction-audit",
+      "name": "Interaction Audit — Findings",
+      "slug": "interaction-audit",
+      "scope": "project",
+      "project": "cadence",
+      "author": "Elena",
+      "tags": [
+        "cadence",
+        "audit",
+        "usability",
+        "findings"
+      ],
+      "created": "Thu Mar 19 2026 01:00:00 GM",
+      "fileSize": 8184,
+      "description": "Findings from an interaction audit of the product surface, ordered by user impact rather than by ease of fixing.",
+      "body": "# Interaction Audit — Findings\n\nOrdered by impact on the user, not by how easy each is to fix.\n\n---\n\n## 1. Focus order breaks inside the filter panel\n\nOpening the panel leaves focus on the trigger, so keyboard users tab through the entire page before reaching the controls they just opened. Move focus into the panel and trap it while open.\n\n## 2. Destructive actions have no confirmation\n\nRemoving a saved item is immediate and irreversible. Either confirm, or make it undoable. Undo is the better pattern here because the action is frequent.\n\n## 3. Loading states collapse the layout\n\nCards shrink to zero height while loading, so the page jumps and the scroll position moves. Reserve the space.\n\n## 4. Hover is the only affordance on card actions\n\nActions appear on hover, which means they do not exist on touch. Make them persistently visible on small screens.\n\n## 5. Error copy describes the system, not the fix\n\nMessages report what failed internally. Rewrite each to state the next action the user should take.\n\n## Recommendation\n\nItems 1 and 2 are correctness issues and should block release. The rest are quality and can follow.\n",
+      "sections": [
+        "Interaction Audit — Findings",
+        "1. Focus order breaks inside the filter panel",
+        "2. Destructive actions have no confirmation",
+        "3. Loading states collapse the layout",
+        "4. Hover is the only affordance on card actions",
+        "5. Error copy describes the system, not the fix",
+        "Recommendation"
+      ],
+      "connections": [
+        "_team/convictions",
+        "projects/cadence/component-states",
+        "projects/cadence/motion-language",
+        "projects/harbor/research-synthesis"
+      ]
+    },
+    {
+      "id": "projects/harbor/research-synthesis",
+      "name": "Harbor — Research Synthesis",
+      "slug": "research-synthesis",
+      "scope": "project",
+      "project": "harbor",
+      "author": "Karl",
+      "tags": [
+        "harbor",
+        "research",
+        "synthesis",
+        "insights"
+      ],
+      "created": "Mon Mar 23 2026 01:00:00 GM",
+      "fileSize": 9906,
+      "description": "Synthesis of discovery interviews: the recurring behaviours, the mental model mismatch, and what each implies for the design.",
+      "body": "# Harbor — Research Synthesis\n\n> Fictional reference project used to demonstrate Luia. Not a real engagement.\n\n---\n\n## Method\n\nTwelve semi-structured interviews across three user groups, plus observed task walkthroughs. Sessions were coded independently by two people before themes were merged.\n\n## Themes\n\n### 1. People plan around uncertainty, not around dates\n\nParticipants consistently described working backwards from an unknown rather than forward from a schedule. The current interface assumes a fixed timeline, which is why the calendar view is largely unused.\n\n**Implication**: lead with the unresolved item, not the date.\n\n### 2. The saved state is not trusted\n\nSeveral participants re-checked their work after saving, because nothing confirmed the save persisted. Two kept parallel notes elsewhere as insurance.\n\n**Implication**: make persistence visible and explicit.\n\n### 3. Shared items lack ownership signals\n\nWhen several people can edit, nobody feels responsible. Participants described avoiding edits rather than risking a conflict.\n\n**Implication**: show who touched what, and when.\n\n## What We Are Not Doing\n\nAdding a notification system. The evidence points at trust and clarity, not at a lack of alerts. More notifications would likely worsen theme three.\n",
+      "sections": [
+        "Harbor — Research Synthesis",
+        "Method",
+        "Themes",
+        "1. People plan around uncertainty, not around dates",
+        "2. The saved state is not trusted",
+        "3. Shared items lack ownership signals",
+        "What We Are Not Doing"
+      ],
+      "connections": [
+        "_team/convictions",
+        "projects/harbor/information-architecture",
+        "projects/harbor/usability-testing",
+        "projects/cadence/interaction-audit"
+      ]
+    },
+    {
+      "id": "projects/harbor/information-architecture",
+      "name": "Information Architecture Proposal",
+      "slug": "information-architecture",
+      "scope": "project",
+      "project": "harbor",
+      "author": "Karl",
+      "tags": [
+        "harbor",
+        "ia",
+        "navigation",
+        "structure"
+      ],
+      "created": "Mon Mar 23 2026 01:00:00 GM",
+      "fileSize": 5797,
+      "description": "Proposed information architecture derived from the research, including the card-sort results and the reasoning behind the top-level split.",
+      "body": "# Information Architecture Proposal\n\n## Current Problem\n\nThe existing structure is organised around internal teams. Users do not know which team owns what, so they navigate by search and give up when search fails.\n\n## Proposed Top Level\n\n```\nNow        — what needs attention today\nPlanned    — committed and scheduled\nArchive    — completed and reference material\nSettings   — account and workspace\n```\n\n## Why This Split\n\nThe card sort produced a strong clustering by **urgency**, not by type. Participants grouped an invoice and a message together when both were unresolved, and separated two invoices when one was settled.\n\nThis is the same finding as theme one in the research: people organise around what is unresolved.\n\n## Migration Risk\n\nExisting users have learned the current structure, however poorly it performs. The change needs a one-time explanation and a temporary bridge from the old labels.\n\nSee: [[research-synthesis]]\n",
+      "sections": [
+        "Information Architecture Proposal",
+        "Current Problem",
+        "Proposed Top Level",
+        "Why This Split",
+        "Migration Risk"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "projects/harbor/research-synthesis",
+        "projects/harbor/usability-testing",
+        "projects/atlas/sitemap"
+      ]
+    },
+    {
+      "id": "projects/harbor/usability-testing",
+      "name": "Usability Test Plan & Results",
+      "slug": "usability-testing",
+      "scope": "project",
+      "project": "harbor",
+      "author": "Karl",
+      "tags": [
+        "harbor",
+        "testing",
+        "usability",
+        "validation"
+      ],
+      "created": "Mon Mar 23 2026 01:00:00 GM",
+      "fileSize": 7950,
+      "description": "Test plan and results for the restructured navigation, including the two tasks that failed and what changed as a result.",
+      "body": "# Usability Test Plan & Results\n\n## Tasks\n\n1. Find an item needing attention this week\n2. Move a planned item to a different date\n3. Retrieve something completed last month\n4. Share an item with a colleague\n5. Undo an accidental change\n\n## Results\n\n| Task | Completion | Notes |\n|---|---|---|\n| 1 | 8 of 8 | Fast, unprompted. The new top level worked. |\n| 2 | 7 of 8 | One participant looked for drag and drop |\n| 3 | 8 of 8 | Archive label was immediately understood |\n| 4 | 4 of 8 | **Failed.** Sharing was not discoverable |\n| 5 | 3 of 8 | **Failed.** Undo was not believed to exist |\n\n## Changes Made\n\n**Sharing**: moved from an overflow menu to a persistent action on the item itself. Retested at 8 of 8.\n\n**Undo**: replaced the silent success toast with a persistent undo affordance lasting ten seconds. Retested at 7 of 8, with the remaining participant finding it on a second attempt.\n\n## Reflection\n\nBoth failures were discoverability, not comprehension. Once found, both features were understood immediately. That pattern suggests the problem was placement rather than model.\n\nSee: [[information-architecture]]\n",
+      "sections": [
+        "Usability Test Plan & Results",
+        "Tasks",
+        "Results",
+        "Changes Made",
+        "Reflection"
+      ],
+      "connections": [
+        "_team/workflows",
+        "projects/harbor/information-architecture",
+        "projects/harbor/research-synthesis",
+        "projects/atlas/implement-from-design"
+      ]
+    },
+    {
+      "id": "projects/verso/brand-expression",
+      "name": "Verso — Brand Expression System",
+      "slug": "brand-expression",
+      "scope": "project",
+      "project": "verso",
+      "author": "Yuki",
+      "tags": [
+        "verso",
+        "brand",
+        "identity",
+        "expression"
+      ],
+      "created": "Thu Mar 26 2026 01:00:00 GM",
+      "fileSize": 5318,
+      "description": "How the brand flexes across contexts: the fixed core, the variable layer, and the rules that keep range from becoming inconsistency.",
+      "body": "# Verso — Brand Expression System\n\n> Fictional reference project used to demonstrate Luia. Not a real engagement.\n\n---\n\n## The Core, Fixed\n\nThe wordmark, the primary type family, and the base grid never change. These carry recognition and are not available for interpretation.\n\n## The Variable Layer\n\nAccent colour, image treatment, and compositional density flex by context:\n\n| Context | Density | Accent |\n|---|---|---|\n| Editorial | Generous | Muted |\n| Campaign | Tight | Saturated |\n| Product UI | Neutral | Functional only |\n| Social | Tight | Saturated |\n\n## The Rule That Holds It Together\n\nFlex one dimension at a time. A layout that changes density, colour, and image treatment simultaneously stops reading as the same brand.\n\n## Applying It\n\nStart from the context, take its row from the table, and change nothing else. Range comes from disciplined variation on a fixed core, not from freedom.\n",
+      "sections": [
+        "Verso — Brand Expression System",
+        "The Core, Fixed",
+        "The Variable Layer",
+        "The Rule That Holds It Together",
+        "Applying It"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "projects/verso/editorial-grid",
+        "projects/verso/art-direction-notes",
+        "projects/lumen/design-system"
+      ]
+    },
+    {
+      "id": "projects/verso/editorial-grid",
+      "name": "Editorial Grid & Composition",
+      "slug": "editorial-grid",
+      "scope": "project",
+      "project": "verso",
+      "author": "Yuki",
+      "tags": [
+        "verso",
+        "grid",
+        "layout",
+        "editorial"
+      ],
+      "created": "Thu Mar 26 2026 01:00:00 GM",
+      "fileSize": 5724,
+      "description": "The editorial grid and the compositional moves it supports, including when to deliberately break it.",
+      "body": "# Editorial Grid & Composition\n\n## The Grid\n\nA 12-column grid with a wide outer margin. The margin is the point: it gives long-form text a comfortable measure and gives images room to break out against.\n\n## Measure\n\nBody text sits between 60 and 75 characters per line. Below 45 the eye jumps too often, above 85 it loses the line return.\n\n## Compositional Moves\n\n### Full bleed\nImage spans edge to edge. Reserved for a section opener, at most twice per article.\n\n### Break out\nImage extends past the text column but not to the edge. The workhorse move.\n\n### Inset\nImage sits inside the text column. Used for supporting detail, never for the lead.\n\n### Marginal note\nShort annotation in the outer margin. Aligns to the first line of the paragraph it refers to.\n\n## Breaking The Grid\n\nThe grid can be broken once per page, deliberately, for a single element that carries genuine emphasis. Twice reads as an error.\n\nSee: [[brand-expression]]\n",
+      "sections": [
+        "Editorial Grid & Composition",
+        "The Grid",
+        "Measure",
+        "Compositional Moves",
+        "Full bleed",
+        "Break out",
+        "Inset",
+        "Marginal note",
+        "Breaking The Grid"
+      ],
+      "connections": [
+        "_team/design-system-patterns",
+        "projects/verso/brand-expression",
+        "projects/verso/art-direction-notes",
+        "projects/meridian/archive-block-redesign"
+      ]
+    },
+    {
+      "id": "projects/verso/art-direction-notes",
+      "name": "Art Direction Notes",
+      "slug": "art-direction-notes",
+      "scope": "project",
+      "project": "verso",
+      "author": "Yuki",
+      "tags": [
+        "verso",
+        "art-direction",
+        "photography",
+        "craft"
+      ],
+      "created": "Thu Mar 26 2026 01:00:00 GM",
+      "fileSize": 7310,
+      "description": "Direction for photography and image treatment: what to shoot, how to crop, and the treatments that are off limits.",
+      "body": "# Art Direction Notes\n\n## Photography\n\nAvailable light wherever possible. The work should look observed rather than staged, which means accepting imperfect conditions in exchange for a credible moment.\n\n### Shoot\n- People mid-action, not posed to camera\n- Hands and process, since detail carries craft\n- Environment wide enough to establish place\n\n### Avoid\n- Direct-to-camera smiles in a neutral space\n- Anything that reads as a stock library shot\n- Composites that imply a moment which did not occur\n\n## Cropping\n\nCrop for the subject's direction of attention. Leave space where the person is looking. A tight crop against the direction of gaze feels claustrophobic and the viewer cannot articulate why.\n\n## Treatment\n\nMinimal. Modest contrast adjustment and a consistent warmth. No heavy grading, no filters, nothing that would read as a preset.\n\n## Why This Restraint\n\nThe brand's credibility rests on looking like documentation rather than advertising. Every treatment that draws attention to itself spends a little of that credibility.\n\nSee: [[brand-expression]]\n",
+      "sections": [
+        "Art Direction Notes",
+        "Photography",
+        "Shoot",
+        "Avoid",
+        "Cropping",
+        "Treatment",
+        "Why This Restraint"
+      ],
+      "connections": [
+        "_team/convictions",
+        "projects/verso/editorial-grid",
+        "projects/verso/brand-expression",
+        "projects/meridian/ux-architecture"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "_team/convictions",
+      "target": "_team/design-system-patterns",
+      "type": "foundation",
+      "label": "We never rebuild what the system already provides",
+      "description": "The convictions point directly at the atomic hierarchy that makes reuse possible."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "_team/workflows",
+      "type": "foundation",
+      "label": "Building in the design tool",
+      "description": "The patterns define the vocabulary the workflows operate on."
+    },
+    {
+      "source": "_team/convictions",
+      "target": "_team/workflows",
+      "type": "foundation",
+      "label": "We write down the reasoning",
+      "description": "Convictions set the standard the workflows are designed to enforce."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/meridian/ux-architecture",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Meridian — UX Architecture & Component Map."
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/meridian/mobile-patterns",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Mobile Pattern Advisor."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/meridian/archive-block-redesign",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Archive Block — Editorial Hybrid Redesign."
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/meridian/desktop-to-mobile",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Large To Small — Unified Translation."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/lumen/design-system",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Design System Rules — Lumen."
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/lumen/scroll-reference",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Scroll Features Reference."
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/lumen/implementation-plan",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Implementation Plan — Lumen Site."
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/lumen/extraction-notes",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Extraction Notes — Frames vs Components."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/atlas/sitemap",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Atlas — Sitemap & Templates."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/atlas/block-library",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in New Design Templates — Atlas."
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/atlas/implement-from-design",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Implement From Design."
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/atlas/sync-workflow",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Sitemap Sync Workflow."
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/cadence/motion-language",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Cadence — Motion Language."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/cadence/component-states",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Component State Matrix."
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/cadence/interaction-audit",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Interaction Audit — Findings."
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/harbor/research-synthesis",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Harbor — Research Synthesis."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/harbor/information-architecture",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Information Architecture Proposal."
+    },
+    {
+      "source": "_team/workflows",
+      "target": "projects/harbor/usability-testing",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Usability Test Plan & Results."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/verso/brand-expression",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Verso — Brand Expression System."
+    },
+    {
+      "source": "_team/design-system-patterns",
+      "target": "projects/verso/editorial-grid",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Editorial Grid & Composition."
+    },
+    {
+      "source": "_team/convictions",
+      "target": "projects/verso/art-direction-notes",
+      "type": "reference",
+      "label": "informs",
+      "description": "Team knowledge applied in Art Direction Notes."
+    },
+    {
+      "source": "projects/meridian/ux-architecture",
+      "target": "projects/meridian/mobile-patterns",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/meridian/mobile-patterns",
+      "target": "projects/meridian/archive-block-redesign",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/meridian/archive-block-redesign",
+      "target": "projects/meridian/desktop-to-mobile",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/meridian/ux-architecture",
+      "target": "projects/meridian/desktop-to-mobile",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/lumen/design-system",
+      "target": "projects/lumen/scroll-reference",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/lumen/scroll-reference",
+      "target": "projects/lumen/implementation-plan",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/lumen/implementation-plan",
+      "target": "projects/lumen/extraction-notes",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/lumen/design-system",
+      "target": "projects/lumen/extraction-notes",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/atlas/sitemap",
+      "target": "projects/atlas/block-library",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/atlas/block-library",
+      "target": "projects/atlas/implement-from-design",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/atlas/implement-from-design",
+      "target": "projects/atlas/sync-workflow",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/atlas/sitemap",
+      "target": "projects/atlas/sync-workflow",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/cadence/motion-language",
+      "target": "projects/cadence/component-states",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/cadence/component-states",
+      "target": "projects/cadence/interaction-audit",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/cadence/motion-language",
+      "target": "projects/cadence/interaction-audit",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/harbor/research-synthesis",
+      "target": "projects/harbor/information-architecture",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/harbor/information-architecture",
+      "target": "projects/harbor/usability-testing",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/harbor/research-synthesis",
+      "target": "projects/harbor/usability-testing",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/verso/brand-expression",
+      "target": "projects/verso/editorial-grid",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/verso/editorial-grid",
+      "target": "projects/verso/art-direction-notes",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/verso/brand-expression",
+      "target": "projects/verso/art-direction-notes",
+      "type": "sibling",
+      "label": "related",
+      "description": "Related work within the same engagement."
+    },
+    {
+      "source": "projects/meridian/mobile-patterns",
+      "target": "projects/lumen/scroll-reference",
+      "type": "reference",
+      "label": "pattern reuse",
+      "description": "Small-screen interaction thinking carried into the scroll system."
+    },
+    {
+      "source": "projects/lumen/design-system",
+      "target": "projects/atlas/block-library",
+      "type": "reference",
+      "label": "system reuse",
+      "description": "Token structure reused as the basis for the block library."
+    },
+    {
+      "source": "projects/atlas/implement-from-design",
+      "target": "projects/lumen/extraction-notes",
+      "type": "reference",
+      "label": "method reuse",
+      "description": "Extraction findings shaped the implementation method."
+    },
+    {
+      "source": "projects/cadence/motion-language",
+      "target": "projects/lumen/scroll-reference",
+      "type": "reference",
+      "label": "motion reuse",
+      "description": "Duration bands and easing carried into the scroll patterns."
+    },
+    {
+      "source": "projects/cadence/component-states",
+      "target": "projects/atlas/block-library",
+      "type": "reference",
+      "label": "state reuse",
+      "description": "The state matrix became a requirement for every block."
+    },
+    {
+      "source": "projects/harbor/information-architecture",
+      "target": "projects/atlas/sitemap",
+      "type": "reference",
+      "label": "structure reuse",
+      "description": "Urgency-led structure informed the sitemap approach."
+    },
+    {
+      "source": "projects/harbor/research-synthesis",
+      "target": "projects/cadence/interaction-audit",
+      "type": "reference",
+      "label": "evidence reuse",
+      "description": "Research themes framed what the audit looked for."
+    },
+    {
+      "source": "projects/verso/editorial-grid",
+      "target": "projects/meridian/archive-block-redesign",
+      "type": "reference",
+      "label": "composition reuse",
+      "description": "Editorial composition rules shaped the hybrid layout."
+    },
+    {
+      "source": "projects/verso/brand-expression",
+      "target": "projects/lumen/design-system",
+      "type": "reference",
+      "label": "brand reuse",
+      "description": "Expression rules constrained the token palette."
+    },
+    {
+      "source": "projects/cadence/motion-language",
+      "target": "projects/meridian/mobile-patterns",
+      "type": "reference",
+      "label": "motion reuse",
+      "description": "Choreography rules applied to small-screen transitions."
+    },
+    {
+      "source": "projects/harbor/usability-testing",
+      "target": "projects/atlas/implement-from-design",
+      "type": "reference",
+      "label": "validation reuse",
+      "description": "Test findings fed back into implementation checks."
+    },
+    {
+      "source": "projects/verso/art-direction-notes",
+      "target": "projects/meridian/ux-architecture",
+      "type": "reference",
+      "label": "direction reuse",
+      "description": "Image treatment rules applied to archive templates."
+    }
+  ]
+}
