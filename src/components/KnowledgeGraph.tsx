@@ -43,7 +43,7 @@ function nodeRadius(fileSize: number): number {
   return 6 + t * 16;
 }
 
-const GROUP_ORDER = ["team", "museon", "pulse", "solara"];
+const GROUP_ORDER = ["team", "meridian", "lumen", "atlas", "cadence", "harbor", "verso"];
 const GAP_FRACTION = 0.045;
 
 function getGroupKey(node: GraphNode): string {
@@ -52,17 +52,23 @@ function getGroupKey(node: GraphNode): string {
 }
 
 const GROUP_COLORS: Record<string, string> = {
-  team: "#4f6d7a",
-  museon: "#fc0000",
-  pulse: "#fcef00",
-  solara: "#00fc26",
+  team: "#2E4052",
+  meridian: "#BF5F49",
+  lumen: "#B8862F",
+  atlas: "#5E8F64",
+  cadence: "#8C5C74",
+  harbor: "#5A7E96",
+  verso: "#A2674F",
 };
 
 const GROUP_LABELS: Record<string, string> = {
   team: "Team Knowledge",
-  museon: "Museon",
-  pulse: "Pulse",
-  solara: "Solara",
+  meridian: "Meridian",
+  lumen: "Lumen",
+  atlas: "Atlas",
+  cadence: "Cadence",
+  harbor: "Harbor",
+  verso: "Verso",
 };
 
 
@@ -123,7 +129,7 @@ function computeRingLayout(
       key,
       startAngle: groupStart,
       endAngle: groupEnd,
-      color: GROUP_COLORS[key] ?? "#4F6D7A",
+      color: GROUP_COLORS[key] ?? "#2E4052",
     });
 
     currentAngle += GAP_FRACTION * 2 * Math.PI;
@@ -309,8 +315,8 @@ export function KnowledgeGraph({
           {edgePaths.map((l, i) => {
             const srcNode = nodes.find(n => n.id === l.edge.source);
             const tgtNode = nodes.find(n => n.id === l.edge.target);
-            const c1 = srcNode ? getNodeColor(srcNode.scope, srcNode.project) : "#4f6d7a";
-            const c2 = tgtNode ? getNodeColor(tgtNode.scope, tgtNode.project) : "#4f6d7a";
+            const c1 = srcNode ? getNodeColor(srcNode.scope, srcNode.project) : "#2E4052";
+            const c2 = tgtNode ? getNodeColor(tgtNode.scope, tgtNode.project) : "#2E4052";
             return (
               <linearGradient
                 key={`grad-${i}`}

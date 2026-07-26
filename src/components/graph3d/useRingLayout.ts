@@ -16,30 +16,39 @@ export interface GroupArc3D {
   color: string;
 }
 
-const GROUP_ORDER = ["team", "museon", "pulse", "solara"];
+const GROUP_ORDER = ["team", "meridian", "lumen", "atlas", "cadence", "harbor", "verso"];
 const GAP_FRACTION = 0.045;
 const RING_RADIUS = 180;
 
 const GROUP_COLORS: Record<string, string> = {
-  team: "#4f6d7a",
-  museon: "#fc0000",
-  pulse: "#fcef00",
-  solara: "#00fc26",
+  team: "#2E4052",
+  meridian: "#BF5F49",
+  lumen: "#B8862F",
+  atlas: "#5E8F64",
+  cadence: "#8C5C74",
+  harbor: "#5A7E96",
+  verso: "#A2674F",
 };
 
 // Subtle Z offsets per group so they separate slightly in 3D
 const GROUP_Z: Record<string, number> = {
   team: 0,
-  museon: 10,
-  pulse: 5,
-  solara: -5,
+  meridian: 10,
+  lumen: 5,
+  atlas: -5,
+  cadence: -10,
+  harbor: 8,
+  verso: -8,
 };
 
 export const GROUP_LABELS: Record<string, string> = {
   team: "Team Knowledge",
-  museon: "Museon",
-  pulse: "Pulse",
-  solara: "Solara",
+  meridian: "Meridian",
+  lumen: "Lumen",
+  atlas: "Atlas",
+  cadence: "Cadence",
+  harbor: "Harbor",
+  verso: "Verso",
 };
 
 function getGroupKey(node: GraphNode): string {
@@ -101,7 +110,7 @@ export function useRingLayout(nodes: GraphNode[]): {
         key,
         startAngle: groupStart,
         endAngle: groupEnd,
-        color: GROUP_COLORS[key] ?? "#4f6d7a",
+        color: GROUP_COLORS[key] ?? "#2E4052",
       });
 
       currentAngle += GAP_FRACTION * 2 * Math.PI;

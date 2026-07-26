@@ -8,10 +8,10 @@
 }
 
 :root {
-  --bg-primary: #F0F0F0;
-  --bg-secondary: #E8E8E8;
-  --text-primary: #2D3748;
-  --text-secondary: #8A95A3;
+  --bg-primary: #F4F2ED;
+  --bg-secondary: #EAE7E0;
+  --text-primary: #2E4052;
+  --text-secondary: #5A6B7C;
   --glass-bg: rgba(255, 255, 255, 0.95);
   --glass-border: rgba(0, 0, 0, 0.06);
   --font-sans: 'Pantasia', system-ui, -apple-system, sans-serif;
@@ -36,7 +36,7 @@ html, body, #root {
 }
 
 body {
-  background: #F0F0F0;
+  background: #F4F2ED;
 }
 
 /* Panel row hover — CSS-only, no JS needed */
@@ -60,6 +60,13 @@ body {
 .panel-scroll::-webkit-scrollbar { width: 3px; }
 .panel-scroll::-webkit-scrollbar-track { background: transparent; }
 .panel-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 3px; }
+
+/* Inputs use the muted ink so placeholders stay legible against the canvas
+   instead of falling back to the browser's very light default. */
+input::placeholder {
+  color: #78868F;
+  opacity: 1;
+}
 
 /* Close button hover */
 .close-btn {

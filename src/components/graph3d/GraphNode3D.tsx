@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import type { Mesh } from "three";
 import type { ThreeEvent } from "@react-three/fiber";
 import type { GraphNode } from "../../lib/types";
-import { getNodeColor } from "../../lib/colors";
+import { getNodeColor, INK, INK_MUTED, INK_FAINT } from "../../lib/colors";
 import { nodeRadius } from "./useForceLayout";
 import type { NodePosition3D } from "./useForceLayout";
 
@@ -27,6 +27,11 @@ export function GraphNode3D({ node, pos, dimmed, isSelected, isActive, onNodeCli
 
   const subtitle = (node.scope === "project" ? node.project : node.scope) +
     (node.author !== "team" ? ` \u00B7 ${node.author}` : "");
+
+  // Titles read "Project \u2014 Descriptor", but the project already appears in the
+  // subtitle below. Drop the redundant prefix so the uppercase label keeps its
+  // meaningful half instead of truncating into it.
+  const displayName = node.name.replace(/^[^\u2014]+\u2014\s*/, "").trim() || node.name;
 
   const targetScale = hovered ? 1.25 : 1;
   useFrame(() => {
@@ -81,7 +86,7 @@ export function GraphNode3D({ node, pos, dimmed, isSelected, isActive, onNodeCli
       </mesh>
 
       <Html
-        position={[r + 8, 0, 0]}
+        position={[r + 11, 0, 0]}
         style={{
           pointerEvents: "none",
           userSelect: "none",
@@ -92,24 +97,26 @@ export function GraphNode3D({ node, pos, dimmed, isSelected, isActive, onNodeCli
       >
         <div style={{
           fontFamily: "var(--font-sans)",
-          fontSize: 10,
-          fontWeight: 500,
-          color: active ? "#2D3748" : "#8A95A3",
+          fontSize: 12,
+          fontWeight: 700,
+          color: active ? INK : INK_MUTED,
           whiteSpace: "nowrap",
-          lineHeight: 1.2,
-          letterSpacing: "0.02em",
+          lineHeight: 1.25,
+          textTransform: "uppercase",
+          letterSpacing: "0.06em",
           transition: "color 0.15s",
           WebkitFontSmoothing: "antialiased",
         }}>
-          {node.name.length > 28 ? node.name.slice(0, 26) + "\u2026" : node.name}
+          {displayName.length > 30 ? displayName.slice(0, 28) + "\u2026" : displayName}
         </div>
         <div style={{
           fontFamily: "var(--font-sans)",
-          fontSize: 8,
-          fontWeight: 400,
-          color: "#B0B8C4",
+          fontSize: 10,
+          fontWeight: 500,
+          color: INK_FAINT,
           whiteSpace: "nowrap",
           letterSpacing: "0.02em",
+          marginTop: 1,
           WebkitFontSmoothing: "antialiased",
         }}>
           {subtitle}

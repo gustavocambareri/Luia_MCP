@@ -9,10 +9,10 @@ interface Decision {
 }
 
 const SCOPE_STYLES: Record<string, { bg: string; color: string }> = {
-  visual: { bg: "rgba(232, 93, 93, 0.12)", color: "#E85D5D" },
-  layout: { bg: "rgba(76, 175, 125, 0.12)", color: "#4CAF7D" },
-  interaction: { bg: "rgba(212, 168, 67, 0.12)", color: "#D4A843" },
-  system: { bg: "rgba(123, 143, 163, 0.12)", color: "#7B8FA3" },
+  visual: { bg: "rgba(191, 95, 73, 0.12)", color: "#BF5F49" },
+  layout: { bg: "rgba(94, 143, 100, 0.12)", color: "#5E8F64" },
+  interaction: { bg: "rgba(184, 134, 47, 0.12)", color: "#B8862F" },
+  system: { bg: "rgba(90, 126, 150, 0.12)", color: "#5A7E96" },
 };
 
 function inferScope(text: string): Decision["scope"] {
@@ -97,7 +97,7 @@ function DecisionBody({ text }: { text: string }) {
     if (line.trim().startsWith("- ")) {
       elements.push(
         <div key={i} style={{ display: "flex", gap: 6, marginBottom: 3 }}>
-          <span style={{ color: "#B0B8C4", flexShrink: 0, lineHeight: 1.55 }}>·</span>
+          <span style={{ color: "#78868F", flexShrink: 0, lineHeight: 1.55 }}>·</span>
           <span style={{ wordBreak: "break-word" }}>{line.trim().slice(2)}</span>
         </div>
       );
@@ -120,9 +120,9 @@ function DecisionBody({ text }: { text: string }) {
       if (cells.length > 0) {
         elements.push(
           <div key={i} style={{ marginBottom: 3 }}>
-            <span style={{ fontWeight: 500, color: "#2D3748" }}>{cells[0]}</span>
+            <span style={{ fontWeight: 600, color: "#2E4052" }}>{cells[0]}</span>
             {cells.length > 1 && (
-              <span style={{ color: "#8A95A3" }}> — {cells.slice(1).join(" · ")}</span>
+              <span style={{ color: "#5A6B7C" }}> — {cells.slice(1).join(" · ")}</span>
             )}
           </div>
         );
@@ -148,7 +148,7 @@ export function DecisionLog({ node }: { node: GraphNode | null }) {
 
   if (!node) {
     return (
-      <div style={{ fontSize: 11, color: "#B0B8C4", padding: "8px 0", lineHeight: 1.5 }}>
+      <div style={{ fontSize: 13, fontWeight: 500, color: "#78868F", padding: "8px 0", lineHeight: 1.5 }}>
         Select a node on the graph.
       </div>
     );
@@ -172,14 +172,15 @@ export function DecisionLog({ node }: { node: GraphNode | null }) {
               key={scope}
               onClick={() => setFilterScope(active ? null : scope)}
               style={{
-                padding: "3px 8px",
-                fontSize: 10,
-                borderRadius: 3,
+                padding: "6px 12px",
+                fontSize: 11, fontWeight: 700,
+                borderRadius: 5,
                 border: "none",
                 cursor: "pointer",
-                textTransform: "capitalize",
+                textTransform: "uppercase",
+                letterSpacing: "0.07em",
                 background: active ? style.bg : "rgba(0,0,0,0.03)",
-                color: active ? style.color : "#8A95A3",
+                color: active ? style.color : "#5A6B7C",
                 transition: "all 0.15s",
               }}
             >
@@ -192,7 +193,7 @@ export function DecisionLog({ node }: { node: GraphNode | null }) {
       {/* Entries */}
       <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
         {filtered.length === 0 && (
-          <div style={{ fontSize: 11, color: "#B0B8C4", padding: "8px 0" }}>
+          <div style={{ fontSize: 13, fontWeight: 500, color: "#78868F", padding: "8px 0" }}>
             No matches.
           </div>
         )}
@@ -211,20 +212,20 @@ export function DecisionLog({ node }: { node: GraphNode | null }) {
               {/* Header: badge + title */}
               <div style={{ display: "flex", alignItems: "flex-start", gap: 6 }}>
                 <span style={{
-                  fontSize: 9,
+                  fontSize: 12,
                   padding: "2px 5px",
                   borderRadius: 2,
                   background: scopeStyle.bg,
                   color: scopeStyle.color,
                   textTransform: "uppercase",
                   letterSpacing: "0.04em",
-                  fontWeight: 500,
+                  fontWeight: 600,
                   flexShrink: 0,
                   marginTop: 1,
                 }}>
                   {decision.scope}
                 </span>
-                <div style={{ fontSize: 11, color: "#2D3748", fontWeight: 500, lineHeight: 1.3 }}>
+                <div style={{ fontSize: 12, color: "#2E4052", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", lineHeight: 1.35 }}>
                   {decision.title}
                 </div>
               </div>
@@ -234,8 +235,8 @@ export function DecisionLog({ node }: { node: GraphNode | null }) {
                   marginTop: 8,
                   paddingTop: 8,
                   borderTop: "1px solid rgba(0,0,0,0.04)",
-                  fontSize: 11,
-                  color: "#8A95A3",
+                  fontSize: 13, fontWeight: 500,
+                  color: "#5A6B7C",
                   lineHeight: 1.55,
                 }}>
                   <DecisionBody text={decision.body} />

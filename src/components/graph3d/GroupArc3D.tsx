@@ -58,14 +58,13 @@ export function GroupArc3D({ arc }: Props) {
       >
         <div style={{
           fontFamily: "Pantasia, serif",
-          fontSize: 9,
-          fontWeight: 600,
+          fontSize: 11,
+          fontWeight: 700,
           color: arc.color,
           letterSpacing: "0.08em",
           textTransform: "uppercase" as const,
-          opacity: 0.6,
           whiteSpace: "nowrap",
-          textShadow: "0 0 4px rgba(219,233,238,0.93), 0 0 8px rgba(219,233,238,0.93)",
+          textShadow: "0 0 4px rgba(244,242,237,0.95), 0 0 8px rgba(244,242,237,0.95)",
         }}>
           {GROUP_LABELS[arc.key] ?? arc.key}
         </div>

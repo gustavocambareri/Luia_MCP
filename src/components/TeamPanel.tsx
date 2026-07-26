@@ -9,12 +9,12 @@ interface TeamContribution {
 }
 
 const AUTHOR_COLORS: Record<string, string> = {
-  team: "#7B8FA3",
-  gustavo: "#E85D5D",
-  gus: "#E85D5D",
-  elena: "#D4A843",
-  karl: "#4CAF7D",
-  yuki: "#7B8FA3",
+  team: "#5A7E96",
+  gustavo: "#BF5F49",
+  gus: "#BF5F49",
+  elena: "#B8862F",
+  karl: "#5E8F64",
+  yuki: "#5A7E96",
 };
 
 function deriveTeamView(node: GraphNode, allNodes: GraphNode[], allEdges: GraphEdge[]): TeamContribution[] {
@@ -27,7 +27,7 @@ function deriveTeamView(node: GraphNode, allNodes: GraphNode[], allEdges: GraphE
   });
 
   // Primary author
-  const authorColor = AUTHOR_COLORS[node.author.toLowerCase()] || "#7B8FA3";
+  const authorColor = AUTHOR_COLORS[node.author.toLowerCase()] || "#5A7E96";
   const authorConnected = allNodes
     .filter(n => connectedIds.has(n.id) && n.author.toLowerCase() === node.author.toLowerCase())
     .map(n => n.name);
@@ -43,7 +43,7 @@ function deriveTeamView(node: GraphNode, allNodes: GraphNode[], allEdges: GraphE
   allNodes.forEach(n => {
     if (connectedIds.has(n.id) && !seen.has(n.author.toLowerCase())) {
       seen.add(n.author.toLowerCase());
-      const color = AUTHOR_COLORS[n.author.toLowerCase()] || "#7B8FA3";
+      const color = AUTHOR_COLORS[n.author.toLowerCase()] || "#5A7E96";
       const theirNodes = allNodes
         .filter(cn => connectedIds.has(cn.id) && cn.author.toLowerCase() === n.author.toLowerCase())
         .map(cn => cn.name);
@@ -71,7 +71,7 @@ export function TeamPanel({ node, allNodes, allEdges }: {
 
   if (!node) {
     return (
-      <div style={{ fontSize: 11, color: "#B0B8C4", padding: "8px 0", lineHeight: 1.5 }}>
+      <div style={{ fontSize: 13, fontWeight: 500, color: "#78868F", padding: "8px 0", lineHeight: 1.5 }}>
         Select a node on the graph.
       </div>
     );
@@ -87,10 +87,10 @@ export function TeamPanel({ node, allNodes, allEdges }: {
         padding: "6px 0",
         borderBottom: "1px solid rgba(0,0,0,0.06)",
       }}>
-        <span style={{ fontSize: 10, color: "#B0B8C4", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+        <span style={{ fontSize: 12, fontWeight: 500, color: "#78868F", textTransform: "uppercase", letterSpacing: "0.06em" }}>
           Contributors
         </span>
-        <span style={{ fontSize: 10, color: "#B0B8C4" }}>
+        <span style={{ fontSize: 12, fontWeight: 500, color: "#78868F" }}>
           {contributions.length}
         </span>
       </div>
@@ -111,15 +111,15 @@ export function TeamPanel({ node, allNodes, allEdges }: {
                 background: member.color,
                 flexShrink: 0,
               }} />
-              <span style={{ fontSize: 11, color: "#2D3748", fontWeight: 500, flex: 1, textTransform: "capitalize" }}>
+              <span style={{ fontSize: 12, color: "#2E4052", fontWeight: 700, flex: 1, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 {member.author}
               </span>
               <span style={{
-                fontSize: 9,
+                fontSize: 12, fontWeight: 500,
                 padding: "2px 5px",
                 borderRadius: 2,
                 background: member.role === "Author" ? "rgba(45, 55, 72, 0.08)" : "rgba(0,0,0,0.03)",
-                color: member.role === "Author" ? "#2D3748" : "#B0B8C4",
+                color: member.role === "Author" ? "#2E4052" : "#78868F",
                 textTransform: "uppercase",
                 letterSpacing: "0.04em",
               }}>
@@ -131,11 +131,11 @@ export function TeamPanel({ node, allNodes, allEdges }: {
               <div style={{ paddingLeft: 13, display: "flex", flexWrap: "wrap", gap: 3 }}>
                 {member.connectedNodes.map(name => (
                   <span key={name} style={{
-                    fontSize: 9,
+                    fontSize: 12, fontWeight: 500,
                     padding: "1px 5px",
                     borderRadius: 2,
                     background: "rgba(0,0,0,0.04)",
-                    color: "#B0B8C4",
+                    color: "#78868F",
                     maxWidth: 160,
                     overflow: "hidden",
                     textOverflow: "ellipsis",

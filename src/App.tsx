@@ -13,9 +13,9 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | 
   render() {
     if (this.state.error) {
       return (
-        <div style={{ color: "#2D3748", padding: 40, fontFamily: "var(--font-sans)", background: "#F0F0F0", minHeight: "100vh" }}>
+        <div style={{ color: "#2E4052", padding: 40, fontFamily: "var(--font-sans)", background: "#F4F2ED", minHeight: "100vh" }}>
           <h1 style={{ marginBottom: 16 }}>Runtime Error</h1>
-          <pre style={{ whiteSpace: "pre-wrap", color: "#4A5568" }}>{this.state.error.message}</pre>
+          <pre style={{ whiteSpace: "pre-wrap", color: "#5A6B7C" }}>{this.state.error.message}</pre>
         </div>
       );
     }
@@ -76,7 +76,7 @@ export default function App() {
 
   if (filteredData.nodes.length === 0) {
     return (
-      <div style={{ color: "#2D3748", padding: 40 }}>
+      <div style={{ color: "#2E4052", padding: 40 }}>
         <h1>No nodes loaded</h1>
         <pre>{JSON.stringify({ nodeCount: fullData.nodes.length, edgeCount: fullData.edges.length }, null, 2)}</pre>
       </div>
@@ -90,7 +90,7 @@ export default function App() {
       width: "100vw",
       height: "100vh",
       overflow: "hidden",
-      background: "#F0F0F0",
+      background: "#F4F2ED",
     }}>
       <FilterBar
         scopes={filters.scopes}
@@ -141,29 +141,32 @@ export default function App() {
           boxShadow: "0 2px 12px rgba(0, 0, 0, 0.06)",
           maxWidth: 340,
         }}>
-          <div style={{ fontSize: 13, color: "#2D3748", fontWeight: 500, lineHeight: 1.3 }}>
+          <div style={{ fontSize: 13, color: "#2E4052", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", lineHeight: 1.3 }}>
             {hoveredNode.name}
           </div>
-          <div style={{ fontSize: 11, marginTop: 4, color: "#8A95A3", lineHeight: 1.45 }}>
+          <div style={{ fontSize: 12, marginTop: 5, color: "#5A6B7C", fontWeight: 500, lineHeight: 1.45 }}>
             {hoveredNode.description}
           </div>
           <div style={{ display: "flex", justifyContent: "flex-start", marginTop: 8, paddingTop: 8, borderTop: "1px solid rgba(0,0,0,0.05)" }}>
             <button
               onClick={(e) => { e.stopPropagation(); handleCopyFromHover(hoveredNode); }}
               style={{
-                padding: "4px 10px",
+                padding: "5px 12px",
                 fontSize: 11,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.07em",
                 borderRadius: 4,
                 border: "none",
                 cursor: "pointer",
                 whiteSpace: "nowrap",
-                background: copiedId === hoveredNode.id ? "#2D3748" : "rgba(0,0,0,0.05)",
-                color: copiedId === hoveredNode.id ? "#fff" : "#8A95A3",
+                background: copiedId === hoveredNode.id ? "#2E4052" : "rgba(0,0,0,0.05)",
+                color: copiedId === hoveredNode.id ? "#fff" : "#5A6B7C",
                 transition: "all 0.15s",
                 userSelect: "none",
               }}
-              onMouseOver={(e) => { if (copiedId !== hoveredNode.id) { e.currentTarget.style.background = "rgba(0,0,0,0.08)"; e.currentTarget.style.color = "#2D3748"; }}}
-              onMouseOut={(e) => { if (copiedId !== hoveredNode.id) { e.currentTarget.style.background = "rgba(0,0,0,0.05)"; e.currentTarget.style.color = "#8A95A3"; }}}
+              onMouseOver={(e) => { if (copiedId !== hoveredNode.id) { e.currentTarget.style.background = "rgba(0,0,0,0.08)"; e.currentTarget.style.color = "#2E4052"; }}}
+              onMouseOut={(e) => { if (copiedId !== hoveredNode.id) { e.currentTarget.style.background = "rgba(0,0,0,0.05)"; e.currentTarget.style.color = "#5A6B7C"; }}}
             >
               {copiedId === hoveredNode.id ? "Copied" : "Click to copy"}
             </button>

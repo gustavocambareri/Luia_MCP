@@ -1,11 +1,10 @@
 {
-  "name": "pierre-graph",
+  "name": "luia-graph",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build-graph": "node scripts/build-graph.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -16,12 +15,8 @@
     "@tailwindcss/vite": "^4.2.2",
     "@types/d3": "^7.4.3",
     "d3": "^7.9.0",
-    "geist": "^1.7.0",
-    "gray-matter": "^4.0.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1",
     "tailwindcss": "^4.2.2",
     "three": "^0.176.0"
   },

@@ -10,10 +10,10 @@ interface ContextEntry {
 }
 
 const TYPE_STYLES: Record<string, { bg: string; color: string }> = {
-  token: { bg: "rgba(76, 175, 125, 0.12)", color: "#4CAF7D" },
-  decision: { bg: "rgba(232, 93, 93, 0.12)", color: "#E85D5D" },
-  pattern: { bg: "rgba(123, 143, 163, 0.12)", color: "#7B8FA3" },
-  constraint: { bg: "rgba(212, 168, 67, 0.12)", color: "#D4A843" },
+  token: { bg: "rgba(94, 143, 100, 0.12)", color: "#5E8F64" },
+  decision: { bg: "rgba(191, 95, 73, 0.12)", color: "#BF5F49" },
+  pattern: { bg: "rgba(90, 126, 150, 0.12)", color: "#5A7E96" },
+  constraint: { bg: "rgba(184, 134, 47, 0.12)", color: "#B8862F" },
 };
 
 function inferType(section: string): ContextEntry["type"] {
@@ -60,7 +60,7 @@ function deriveContext(node: GraphNode): ContextEntry[] {
 }
 
 function ConfidenceBar({ value }: { value: number }) {
-  const color = value > 0.9 ? "#4CAF7D" : value > 0.82 ? "#D4A843" : "#E85D5D";
+  const color = value > 0.9 ? "#5E8F64" : value > 0.82 ? "#B8862F" : "#BF5F49";
   return (
     <div
       title={`${Math.round(value * 100)}%`}
@@ -92,7 +92,7 @@ export function ContextPanel({ node }: { node: GraphNode | null }) {
 
   if (!node) {
     return (
-      <div style={{ fontSize: 11, color: "#B0B8C4", padding: "8px 0", lineHeight: 1.5 }}>
+      <div style={{ fontSize: 13, fontWeight: 500, color: "#78868F", padding: "8px 0", lineHeight: 1.5 }}>
         Select a node on the graph.
       </div>
     );
@@ -108,13 +108,13 @@ export function ContextPanel({ node }: { node: GraphNode | null }) {
         padding: "6px 0",
         borderBottom: "1px solid rgba(0,0,0,0.06)",
       }}>
-        <span style={{ fontSize: 10, color: "#B0B8C4", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+        <span style={{ fontSize: 12, fontWeight: 500, color: "#78868F", textTransform: "uppercase", letterSpacing: "0.06em" }}>
           Coverage
         </span>
         <span style={{
-          fontSize: 11,
-          fontWeight: 500,
-          color: avgConfidence > 0.85 ? "#4CAF7D" : "#D4A843",
+          fontSize: 13,
+          fontWeight: 600,
+          color: avgConfidence > 0.85 ? "#5E8F64" : "#B8862F",
         }}>
           {Math.round(avgConfidence * 100)}%
         </span>
@@ -135,19 +135,19 @@ export function ContextPanel({ node }: { node: GraphNode | null }) {
             >
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span style={{
-                  fontSize: 9,
+                  fontSize: 12,
                   padding: "2px 5px",
                   borderRadius: 2,
                   background: typeStyle.bg,
                   color: typeStyle.color,
                   textTransform: "uppercase",
                   letterSpacing: "0.04em",
-                  fontWeight: 500,
+                  fontWeight: 600,
                   flexShrink: 0,
                 }}>
                   {entry.type}
                 </span>
-                <span style={{ fontSize: 11, color: "#2D3748", flex: 1, lineHeight: 1.3 }}>
+                <span style={{ fontSize: 13, fontWeight: 500, color: "#2E4052", flex: 1, lineHeight: 1.3 }}>
                   {entry.label}
                 </span>
                 <ConfidenceBar value={entry.confidence} />
@@ -157,8 +157,8 @@ export function ContextPanel({ node }: { node: GraphNode | null }) {
                   marginTop: 5,
                   paddingTop: 5,
                   borderTop: "1px solid rgba(0,0,0,0.04)",
-                  fontSize: 10,
-                  color: "#8A95A3",
+                  fontSize: 12, fontWeight: 500,
+                  color: "#5A6B7C",
                 }}>
                   {entry.source}
                 </div>

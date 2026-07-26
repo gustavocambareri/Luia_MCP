@@ -12,7 +12,12 @@ export interface Filters {
 export function useGraphData() {
   const [filters, setFilters] = useState<Filters>({
     scopes: new Set(["team", "project", "skills", "personal", "root"]),
-    projects: new Set(["museon", "pulse", "solara"]),
+    // Derived from the data so a new engagement is visible without a code change.
+    projects: new Set(
+      (rawData.nodes as GraphNode[])
+        .map(n => n.project)
+        .filter((p): p is string => Boolean(p))
+    ),
     authorLens: null,
     search: "",
   });

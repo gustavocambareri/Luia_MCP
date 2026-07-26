@@ -11,9 +11,9 @@ interface PromptEntry {
 }
 
 const OUTCOME_STYLES: Record<string, { bg: string; color: string; label: string }> = {
-  accepted: { bg: "rgba(76, 175, 125, 0.12)", color: "#4CAF7D", label: "✓" },
-  rejected: { bg: "rgba(232, 93, 93, 0.12)", color: "#E85D5D", label: "✗" },
-  iterated: { bg: "rgba(212, 168, 67, 0.12)", color: "#D4A843", label: "↻" },
+  accepted: { bg: "rgba(94, 143, 100, 0.12)", color: "#5E8F64", label: "✓" },
+  rejected: { bg: "rgba(191, 95, 73, 0.12)", color: "#BF5F49", label: "✗" },
+  iterated: { bg: "rgba(184, 134, 47, 0.12)", color: "#B8862F", label: "↻" },
 };
 
 function generateActivity(node: GraphNode): PromptEntry[] {
@@ -46,7 +46,7 @@ export function ActivityPanel({ node }: { node: GraphNode | null }) {
 
   if (!node) {
     return (
-      <div style={{ fontSize: 11, color: "#B0B8C4", padding: "8px 0", lineHeight: 1.5 }}>
+      <div style={{ fontSize: 13, fontWeight: 500, color: "#78868F", padding: "8px 0", lineHeight: 1.5 }}>
         Select a node on the graph.
       </div>
     );
@@ -64,13 +64,13 @@ export function ActivityPanel({ node }: { node: GraphNode | null }) {
         gap: 12,
         padding: "6px 0",
         borderBottom: "1px solid rgba(0,0,0,0.06)",
-        fontSize: 10,
-        color: "#B0B8C4",
+        fontSize: 12, fontWeight: 500,
+        color: "#78868F",
         textTransform: "uppercase",
         letterSpacing: "0.06em",
       }}>
-        <span><span style={{ color: "#2D3748", fontWeight: 600 }}>{accepted}/{total}</span> accepted</span>
-        <span><span style={{ color: "#2D3748", fontWeight: 600 }}>{avgIterations.toFixed(1)}</span> avg</span>
+        <span><span style={{ color: "#2E4052", fontWeight: 600 }}>{accepted}/{total}</span> accepted</span>
+        <span><span style={{ color: "#2E4052", fontWeight: 600 }}>{avgIterations.toFixed(1)}</span> avg</span>
       </div>
 
       {/* Entries */}
@@ -91,7 +91,7 @@ export function ActivityPanel({ node }: { node: GraphNode | null }) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 9,
+                  fontSize: 12, fontWeight: 500,
                   background: outcomeStyle.bg,
                   color: outcomeStyle.color,
                   flexShrink: 0,
@@ -100,7 +100,7 @@ export function ActivityPanel({ node }: { node: GraphNode | null }) {
                   {outcomeStyle.label}
                 </span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 11, color: "#2D3748", lineHeight: 1.3 }}>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#2E4052", lineHeight: 1.3 }}>
                     {entry.prompt}
                   </div>
                   <div style={{
@@ -108,14 +108,14 @@ export function ActivityPanel({ node }: { node: GraphNode | null }) {
                     alignItems: "center",
                     gap: 5,
                     marginTop: 2,
-                    fontSize: 10,
-                    color: "#B0B8C4",
+                    fontSize: 12, fontWeight: 500,
+                    color: "#78868F",
                   }}>
                     <span>{entry.tool}</span>
                     {entry.iterations > 1 && (
                       <>
                         <span>·</span>
-                        <span style={{ color: entry.iterations > 2 ? "#D4A843" : "#B0B8C4" }}>
+                        <span style={{ color: entry.iterations > 2 ? "#B8862F" : "#78868F" }}>
                           {entry.iterations}x
                         </span>
                       </>

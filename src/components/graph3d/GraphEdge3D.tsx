@@ -89,11 +89,11 @@ export function GraphEdge3D({ edge, positions, nodes, active, anyActive, dimmed 
     const pts = computeCurve(src, tgt, edge.type, hashEdge(edge.source, edge.target));
 
     // Near-monochrome base with subtle node color tint
-    const baseColor = new Color("#C5CED6");
+    const baseColor = new Color("#C3C9CE");
     const srcNode = nodes.find(n => n.id === edge.source);
     const tgtNode = nodes.find(n => n.id === edge.target);
-    const c1 = new Color(srcNode ? getNodeColor(srcNode.scope, srcNode.project) : "#C5CED6");
-    const c2 = new Color(tgtNode ? getNodeColor(tgtNode.scope, tgtNode.project) : "#C5CED6");
+    const c1 = new Color(srcNode ? getNodeColor(srcNode.scope, srcNode.project) : "#C3C9CE");
+    const c2 = new Color(tgtNode ? getNodeColor(tgtNode.scope, tgtNode.project) : "#C3C9CE");
 
     const tintStrength = 0.15;
     const colors: [number, number, number][] = pts.map((_, i) => {
