@@ -1,14 +1,8 @@
-<div align="center">
-  <img src="public/favicon.svg" alt="Luia" width="64" height="64">
-  <h1>Luia</h1>
-  <p><strong>A knowledge graph for design teams.</strong></p>
-  <p>
-    Your team's conventions, decisions, and hard-won patterns —<br>
-    mapped as a graph you can actually navigate.
-  </p>
-</div>
+<img src="docs/preview.jpg" alt="The Luia graph: team knowledge at the centre, project work fanning out around it, with one node selected to show its connections" width="100%">
 
----
+# Luia
+
+**A knowledge graph for design teams.**
 
 Design teams accumulate knowledge faster than they can organise it. A spacing
 rule agreed in March, a carousel pattern that tested badly, the reason a
@@ -27,10 +21,6 @@ Luia has two halves:
 Both read the same plain Markdown folder. There is no database, no backend, and
 no service to sign up for — which means a team shares its knowledge by putting
 that folder in git.
-
-<div align="center">
-  <img src="docs/preview.png" alt="The Luia graph, showing team knowledge at the centre with project work fanning out around it" width="100%">
-</div>
 
 ## Install the MCP server
 
