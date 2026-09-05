@@ -48,8 +48,12 @@ export const LINE = {
   chord: 0.12,      // a connection at rest
 } as const;
 
-/** The only colour in the app. Used as a flag, never as a fill. */
-export const YELLOW = [246, 214, 44] as const;
+/**
+ * The only colour in the app, sampled from public/reference.png — an acid
+ * green-yellow rather than an amber. One tint, no variants: opacity and
+ * stroke weight carry every state it needs to express.
+ */
+export const YELLOW = [234, 240, 108] as const;
 
 export const SANS = "'ABC Schengen',system-ui,sans-serif";
 // One family throughout. Machine text differs by size and tracking, not typeface.

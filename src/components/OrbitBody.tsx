@@ -81,10 +81,10 @@ export function OrbitBody(p: Props) {
     });
 
     // Animated values, eased toward their targets every frame.
-    const st = new Map<string, { open: number; dim: number; hov: number; filt: number; sx: number; sy: number; z: number; lab: number }>();
-    props.current.nodes.forEach(n => st.set(n.id, { open: 0, dim: 0, hov: 0, filt: 0, sx: 0, sy: 0, z: 0, lab: 0 }));
-    const pst = new Map<string, { wake: number; sx: number; sy: number; z: number; lab: number }>();
-    props.current.projects.forEach(pr => pst.set(pr.id, { wake: 0, sx: 0, sy: 0, z: 0, lab: 0 }));
+    const st = new Map<string, { open: number; dim: number; hov: number; filt: number; sx: number; sy: number; z: number; lab: number; slot: number }>();
+    props.current.nodes.forEach(n => st.set(n.id, { open: 0, dim: 0, hov: 0, filt: 0, sx: 0, sy: 0, z: 0, lab: 0, slot: 0 }));
+    const pst = new Map<string, { wake: number; sx: number; sy: number; z: number; lab: number; slot: number }>();
+    props.current.projects.forEach(pr => pst.set(pr.id, { wake: 0, sx: 0, sy: 0, z: 0, lab: 0, slot: 0 }));
     const est = new Map<string, number>();
 
     let yaw = 0.4, pitch = 0.28, yawT: number | null = null, yawV = 0, pitchV = 0;
@@ -235,7 +235,7 @@ export function OrbitBody(p: Props) {
         const a = i * Math.PI / 4, big = i % 2 === 0;
         // the four cardinal ticks are the instrument's reference marks, and the
         // only place colour appears at rest
-        ctx.strokeStyle = big ? rgb(YELLOW, 0.95 * e0) : rgb(INK, 0.9 * e0);
+        ctx.strokeStyle = big ? rgb(YELLOW, e0) : rgb(INK, 0.9 * e0);
         ctx.lineWidth = big ? 3 : 1;
         ctx.beginPath();
         ctx.moveTo(C.x + Math.cos(a) * (R - (big ? 10 : 5)), C.y + Math.sin(a) * (R - (big ? 10 : 5)));
@@ -252,10 +252,10 @@ export function OrbitBody(p: Props) {
         const o = orbits.get(pr.id)!;
         const e = enter(0.5 + i * 0.22); if (e < 0.01) return;
         const w = pst.get(pr.id)!.wake;
-        // an orbit steps from idle to wake on the ladder, and takes the accent
-        // as it goes, so the live project's path is the yellow one
+        // an orbit only steps up the tonal ladder when its project is live;
+        // the accent stays on the rings so there is one yellow idea, not two
         const a = LINE.orbitIdle + (LINE.orbitWake - LINE.orbitIdle) * w;
-        arc3(u => orbitPoint(o, u * Math.PI * 2 * e + o.phase), 120, a, 1 + 0.8 * w, YELLOW, w * 0.9);
+        arc3(u => orbitPoint(o, u * Math.PI * 2 * e + o.phase), 120, a, 1 + 0.8 * w);
       });
 
       // positions
@@ -335,7 +335,7 @@ export function OrbitBody(p: Props) {
       // own label inline.
       type LabelReq = { key: string; kind: "doc" | "project"; x: number; y: number; gap: number;
         l1: string; l2: string; front: number; col: readonly number[]; emph: number; rank: number; base: number;
-        state: { lab: number } };
+        state: { lab: number; slot: number } };
       const labelReqs: LabelReq[] = [];
       const selNode = sel ? P.nodes.find(n => n.id === sel) ?? null : null;
       const selBox = selNode ? (selNode.project ?? "team") : null;
@@ -355,8 +355,8 @@ export function OrbitBody(p: Props) {
         const rad = (7 + 2.5 * s.wake) * (0.65 + 0.35 * front) * e;
         ctx.save(); ctx.globalAlpha = al;
         // the project ring carries the accent: yellow at rest, fuller when live
-        const ringCol = mix(col, YELLOW, 0.55 + 0.45 * s.wake);
-        ctx.strokeStyle = rgb(ringCol); ctx.lineWidth = 1.4 + 1.2 * s.wake;
+        // one tint at full strength; only the weight changes when the project is live
+        ctx.strokeStyle = rgb(YELLOW); ctx.lineWidth = 1.6 + 1.4 * s.wake;
         ctx.beginPath(); ctx.arc(P2.x, P2.y, rad, 0, 7); ctx.stroke();
         ctx.lineWidth = 1;
         ctx.fillStyle = rgb(col);
@@ -475,8 +475,11 @@ export function OrbitBody(p: Props) {
         const cands = isDoc
           ? [[L.x - wd / 2, L.y - g - ht], [L.x - wd / 2, L.y + g], [L.x + g, L.y - ht / 2], [L.x - g - wd, L.y - ht / 2]]
           : [[L.x - wd / 2, L.y - g - ht - 4], [L.x - wd / 2, L.y + g + 4], [L.x + g + 4, L.y - ht / 2], [L.x - g - 4 - wd, L.y - ht / 2]];
-        let hit = { x: cands[0][0], y: cands[0][1], w: wd, h: ht }, clash = Infinity;
-        for (const c of cands) {
+        // Score every slot, then keep the one this label already uses unless a
+        // different one is clearly better. Without that hysteresis a label sits
+        // on the boundary between two slots and swaps every frame, which reads
+        // as flicker.
+        const scores = cands.map(c => {
           const rc = { x: c[0], y: c[1], w: wd, h: ht };
           let worst = 0;
           for (const q of placed) {
@@ -484,9 +487,16 @@ export function OrbitBody(p: Props) {
             const oy = Math.min(rc.y + rc.h, q.y + q.h) - Math.max(rc.y, q.y);
             if (ox > 0 && oy > 0) worst = Math.max(worst, (ox * oy) / (rc.w * rc.h) * q.a);
           }
-          if (worst < clash) { hit = rc; clash = worst; }
-          if (worst === 0) break;
+          return { rc, worst };
+        });
+        const prev = L.state.slot ?? 0;
+        let best = prev;
+        for (let i = 0; i < scores.length; i++) {
+          if (scores[i].worst + 0.18 < scores[best].worst) best = i;   // must beat the incumbent by a clear margin
         }
+        L.state.slot = best;
+        const hit = scores[best].rc, clash = scores[best].worst;
+
         let alpha = L.base * clamp(1 - clash * 1.7, 0, 1);
         // focus zone: everything but the selection itself yields to it
         if (selPos && L.key !== "d:" + sel) {
@@ -514,7 +524,7 @@ export function OrbitBody(p: Props) {
       // corner ornaments: a small yellow square inside each frame corner,
       // the instrument's registration marks
       { const m = 26, sq = 4;
-        ctx.fillStyle = rgb(YELLOW, 0.9);
+        ctx.fillStyle = rgb(YELLOW);
         [[m, m], [W - m, m], [m, H - m], [W - m, H - m]].forEach(([cx2, cy2]) => {
           ctx.fillRect(cx2 - sq / 2, cy2 - sq / 2, sq, sq);
         }); }
