@@ -3,9 +3,11 @@
 // Paper ground, ink strokes, no colour. The instrument on the right is drawn
 // with depth as tone: near strokes are ink, far strokes fade toward FAINT, which
 // is what gives the body its dimension without any shading.
-export const PAPER = [232, 227, 216] as const;
-export const INK = [28, 26, 23] as const;
-export const FAINT = [150, 144, 132] as const;
+export const PAPER = [214, 214, 212] as const;
+export const INK = [22, 22, 22] as const;
+export const FAINT = [140, 140, 138] as const;
+/** Chalk: the one value lighter than the ground. Reserved for live connections. */
+export const CHALK = [250, 250, 249] as const;
 
 export const EASE = "cubic-bezier(.2,.8,.2,1)";
 export const DUR = 600;
@@ -32,6 +34,9 @@ export function bez(t: number): number {
 
 // Depth to tone: z runs -1 (back) to 1 (front).
 export const toneFor = (z: number) => mix(FAINT, INK, clamp((z + 1) / 2, 0, 1));
+
+/** The only colour in the app. Used as a flag, never as a fill. */
+export const YELLOW = [214, 178, 32] as const;
 
 export const SANS = "'ABC Schengen',system-ui,sans-serif";
 // One family throughout. Machine text differs by size and tracking, not typeface.

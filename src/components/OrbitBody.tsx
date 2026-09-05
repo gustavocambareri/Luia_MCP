@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { GraphNode, GraphEdge } from "../lib/types";
-import { INK, PAPER, bez, clamp, mix, rgb, toneFor, MONO, SANS } from "../lib/theme";
+import { CHALK, INK, PAPER, YELLOW, bez, clamp, mix, rgb, toneFor, MONO, SANS } from "../lib/theme";
 
 interface Props {
   nodes: GraphNode[];
@@ -105,6 +105,15 @@ export function OrbitBody(p: Props) {
       if (n.id === "_team/convictions") return [0, 0, 0];
       const o = orbits.get(n.project ?? "team")!;
       return orbitPoint(o, angle.get(n.id) ?? 0);
+    }
+
+    /** The poster's flag: a small hollow triangle, used only to mark selection. */
+    function flag(x: number, y: number, r: number, up: boolean, alpha: number) {
+      ctx.strokeStyle = rgb(YELLOW, alpha); ctx.lineWidth = 1.3;
+      ctx.beginPath();
+      if (up) { ctx.moveTo(x, y - r); ctx.lineTo(x + r * 0.9, y + r * 0.7); ctx.lineTo(x - r * 0.9, y + r * 0.7); }
+      else { ctx.moveTo(x, y + r); ctx.lineTo(x + r * 0.9, y - r * 0.7); ctx.lineTo(x - r * 0.9, y - r * 0.7); }
+      ctx.closePath(); ctx.stroke(); ctx.lineWidth = 1;
     }
 
     function project(pt: [number, number, number]) {
@@ -278,18 +287,40 @@ export function OrbitBody(p: Props) {
         est.set(key, on);
         const dim = (sel || proj) && onT === 0 ? 1 : 0;
         const z = (A.z + B.z) / 2;
-        ctx.setLineDash(on > 0.5 ? [] : [1, 5]); ctx.lineCap = "round";
-        ctx.lineWidth = on > 0.5 ? 1 : 0.8;
-        ctx.strokeStyle = rgb(toneFor(z), (0.14 - 0.10 * dim + 0.5 * on) * vis * (0.5 + 0.5 * clamp((z + 1) / 2, 0, 1)));
-        if (on > 0.01 && on < 0.999 && sel) {
-          const src = ed.source === sel ? A : B, dst = src === A ? B : A;
-          const g = bez(on);
-          ctx.beginPath(); ctx.moveTo(src.sx, src.sy);
-          ctx.lineTo(src.sx + (dst.sx - src.sx) * g, src.sy + (dst.sy - src.sy) * g); ctx.stroke();
-        } else {
+        const depth = 0.5 + 0.5 * clamp((z + 1) / 2, 0, 1);
+        const live = bez(on);
+
+        // At rest a chord is a faint dotted ink hairline, part of the wireframe.
+        // When it comes alive it is redrawn in chalk — lighter than the paper —
+        // so a live connection reads as a different material rather than as a
+        // heavier version of the same line. A thin ink casing underneath keeps
+        // it legible where it crosses an orbit.
+        ctx.lineCap = "round";
+        if (live < 0.02) {
+          ctx.setLineDash([1, 5]); ctx.lineWidth = 0.8;
+          ctx.strokeStyle = rgb(toneFor(z), (0.14 - 0.10 * dim) * vis * depth);
           let x2 = B.sx, y2 = B.sy;
           if (eL < 1) { x2 = A.sx + (B.sx - A.sx) * eL; y2 = A.sy + (B.sy - A.sy) * eL; }
           ctx.beginPath(); ctx.moveTo(A.sx, A.sy); ctx.lineTo(x2, y2); ctx.stroke();
+        } else {
+          // the live run grows out from the selected end
+          const src = sel && ed.source === sel ? A : sel && ed.target === sel ? B : A;
+          const dst = src === A ? B : A;
+          const g = sel ? live : 1;
+          const ex = src.sx + (dst.sx - src.sx) * g, ey = src.sy + (dst.sy - src.sy) * g;
+
+          ctx.setLineDash([]);
+          ctx.lineWidth = 2.6; ctx.strokeStyle = rgb(INK, 0.32 * live * vis * depth);
+          ctx.beginPath(); ctx.moveTo(src.sx, src.sy); ctx.lineTo(ex, ey); ctx.stroke();
+
+          ctx.lineWidth = 1.3; ctx.strokeStyle = rgb(CHALK, (0.55 + 0.45 * depth) * live * vis);
+          ctx.beginPath(); ctx.moveTo(src.sx, src.sy); ctx.lineTo(ex, ey); ctx.stroke();
+
+          // a bead runs to the far end as the connection draws on
+          if (sel && live < 0.995) {
+            ctx.fillStyle = rgb(CHALK, live * vis);
+            ctx.beginPath(); ctx.arc(ex, ey, 1.8, 0, 7); ctx.fill();
+          }
         }
       });
       ctx.setLineDash([]); ctx.lineCap = "butt";
@@ -394,6 +425,14 @@ export function OrbitBody(p: Props) {
             ctx.beginPath(); ctx.arc(s.sx, s.sy, r + 5 + 6 * bez(s.open), 0, 7); ctx.stroke();
           }
           ctx.restore();
+          // the open document carries the one flash of colour in the app
+          if (n.id === sel) {
+            const o = bez(s.open), rr = r + 5 + 6 * o;
+            ctx.save(); ctx.globalAlpha = al;
+            flag(s.sx, s.sy - rr - 5, 4, false, o);
+            flag(s.sx, s.sy + rr + 5, 4, true, o);
+            ctx.restore();
+          }
         }
         // label
         const lab = n.name.replace(/^[^—]+—\s*/, "").trim().toUpperCase();
