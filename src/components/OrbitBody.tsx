@@ -40,6 +40,15 @@ export function OrbitBody(p: Props) {
   const statusRef = useRef<HTMLDivElement>(null);
   const props = useRef(p); props.current = p;
 
+  // Selecting from the list turns the body to that document too, so the two
+  // panes always agree about what you are looking at.
+  const faceRef = useRef<((n: GraphNode) => void) | null>(null);
+  useEffect(() => {
+    if (!p.selectedId) return;
+    const n = p.nodes.find(x => x.id === p.selectedId);
+    if (n) faceRef.current?.(n);
+  }, [p.selectedId, p.nodes]);
+
   useEffect(() => {
     const cv = cvRef.current!;
     const ctx = cv.getContext("2d")!;
@@ -51,6 +60,14 @@ export function OrbitBody(p: Props) {
         ? { tilt: 1.35, az: 0.3, rad: 0.34, phase: 0 }
         : { tilt: 0.55 + ((i - 1) % 3) * 0.42, az: (i - 1) * Math.PI / 3 + 0.4, rad: 1, phase: (i - 1) * 0.7 });
     });
+
+    /** Turn the body so a point ends up facing the viewer. */
+    function faceTo(pt: [number, number, number]) {
+      const target = Math.atan2(pt[0], pt[2]);
+      let d = target - yaw;
+      d = Math.atan2(Math.sin(d), Math.cos(d));
+      yawT = yaw + d;
+    }
 
     // Angles are fixed per document so a document never moves between frames.
     const angle = new Map<string, number>();
@@ -84,6 +101,12 @@ export function OrbitBody(p: Props) {
     resize();
     const ro = new ResizeObserver(resize); ro.observe(cv);
 
+    function posOf(n: GraphNode): [number, number, number] {
+      if (n.id === "_team/convictions") return [0, 0, 0];
+      const o = orbits.get(n.project ?? "team")!;
+      return orbitPoint(o, angle.get(n.id) ?? 0);
+    }
+
     function project(pt: [number, number, number]) {
       const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
       const x = pt[0] * cy - pt[2] * sy, z = pt[0] * sy + pt[2] * cy;
@@ -107,18 +130,29 @@ export function OrbitBody(p: Props) {
       ctx.lineWidth = 1;
     }
 
+    // Hit radius is generous and grows toward the front of the body, where the
+    // dots are drawn larger. Ties go to whichever dot is nearest the viewer, so
+    // a dot on the far side never steals a click from one in front of it.
     function pickNode(x: number, y: number) {
-      let best: GraphNode | null = null, bd = 16;
+      let best: GraphNode | null = null, bestScore = Infinity;
       for (const n of props.current.nodes) {
         const s = st.get(n.id)!;
-        if (s.filt > 0.5 || s.z < -0.15) continue;
+        if (s.filt > 0.5) continue;
+        const front = clamp((s.z + 1) / 2, 0, 1);
+        const hit = 15 + 9 * front;
         const d = Math.hypot(s.sx - x, s.sy - y);
-        if (d < bd) { bd = d; best = n; }
+        if (d > hit) continue;
+        // prefer the closer pointer distance, then the nearer dot
+        const score = d - front * 6;
+        if (score < bestScore) { bestScore = score; best = n; }
       }
       return best;
     }
 
     let dragging = false, moved = 0, lx = 0, ly = 0, downAt = 0;
+    // Last known pointer position, so hover stays correct as the body rotates
+    // beneath a cursor that has not moved.
+    let px = -1e4, py = -1e4, inside = false;
     const onDown = (e: PointerEvent) => {
       dragging = true; moved = 0; lx = e.clientX; ly = e.clientY; downAt = Date.now();
       cv.classList.add("grabbing"); cv.setPointerCapture(e.pointerId);
@@ -132,7 +166,8 @@ export function OrbitBody(p: Props) {
         lx = e.clientX; ly = e.clientY; return;
       }
       const r = cv.getBoundingClientRect();
-      const n = pickNode(e.clientX - r.left, e.clientY - r.top);
+      px = e.clientX - r.left; py = e.clientY - r.top; inside = true;
+      const n = pickNode(px, py);
       props.current.onHover(n);
       cv.style.cursor = n ? "pointer" : "grab";
     };
@@ -141,10 +176,11 @@ export function OrbitBody(p: Props) {
       if (moved < 6 && Date.now() - downAt < 400) {
         const r = cv.getBoundingClientRect();
         const n = pickNode(e.clientX - r.left, e.clientY - r.top);
+        if (n) faceTo(posOf(n));
         props.current.onSelect(n ? n.id : null);
       }
     };
-    const onLeave = () => props.current.onHover(null);
+    const onLeave = () => { inside = false; props.current.onHover(null); cv.style.cursor = "grab"; };
     cv.addEventListener("pointerdown", onDown);
     cv.addEventListener("pointermove", onMove);
     cv.addEventListener("pointerup", onUp);
@@ -224,10 +260,7 @@ export function OrbitBody(p: Props) {
 
       // positions
       P.nodes.forEach(n => {
-        const box = n.project ?? "team";
-        const o = orbits.get(box)!;
-        const pt: [number, number, number] = n.id === "_team/convictions" ? [0, 0, 0] : orbitPoint(o, angle.get(n.id) ?? 0);
-        const pr = project(pt);
+        const pr = project(posOf(n));
         const s = st.get(n.id)!; s.sx = pr.x; s.sy = pr.y; s.z = pr.z;
       });
 
@@ -328,12 +361,37 @@ export function OrbitBody(p: Props) {
         const col = toneFor(s.z);
         const al = (1 - 0.7 * s.dim) * (1 - s.filt) * e;
         if (n.id !== "_team/convictions") {
-          const r = (3.4 + 1.2 * s.hov + 1.8 * s.open) * (0.6 + 0.4 * front) * e;
-          ctx.save(); ctx.globalAlpha = al; ctx.fillStyle = rgb(col);
-          ctx.beginPath(); ctx.arc(s.sx, s.sy, r, 0, 7); ctx.fill();
+          const r = (4.2 + 1.6 * s.hov + 2 * s.open) * (0.55 + 0.45 * front) * e;
+          const far = front < 0.5;
+          ctx.save(); ctx.globalAlpha = al * (far ? 0.75 : 1);
+          if (far) {
+            // behind the equator: drawn hollow, so it is obvious the document
+            // is on the far side and a click will turn the body to reach it
+            ctx.strokeStyle = rgb(col); ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.arc(s.sx, s.sy, r, 0, 7); ctx.stroke();
+          } else {
+            ctx.fillStyle = rgb(col);
+            ctx.beginPath(); ctx.arc(s.sx, s.sy, r, 0, 7); ctx.fill();
+          }
+          // hovering opens a ring at the size of the actual hit area, so the
+          // target you can click is the target you can see
+          if (s.hov > 0.01) {
+            const hv = bez(s.hov);
+            ctx.strokeStyle = rgb(col, hv * 0.75); ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.arc(s.sx, s.sy, r + 4 + 7 * hv, 0, 7); ctx.stroke();
+            // four ticks, so it reads as a sight rather than a halo
+            for (let q = 0; q < 4; q++) {
+              const a2 = q * Math.PI / 2 + Math.PI / 4;
+              const r0 = r + 6 + 7 * hv, r1 = r0 + 3.5 * hv;
+              ctx.beginPath();
+              ctx.moveTo(s.sx + Math.cos(a2) * r0, s.sy + Math.sin(a2) * r0);
+              ctx.lineTo(s.sx + Math.cos(a2) * r1, s.sy + Math.sin(a2) * r1);
+              ctx.stroke();
+            }
+          }
           if (s.open > 0.01) {
             ctx.strokeStyle = rgb(col, s.open * 0.9); ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.arc(s.sx, s.sy, r + 4 + 5 * bez(s.open), 0, 7); ctx.stroke();
+            ctx.beginPath(); ctx.arc(s.sx, s.sy, r + 5 + 6 * bez(s.open), 0, 7); ctx.stroke();
           }
           ctx.restore();
         }
@@ -352,7 +410,7 @@ export function OrbitBody(p: Props) {
           const rc = { x: c[0], y: c[1], w: wd, h: ht };
           if (!placed.some(q => rc.x < q.x + q.w && rc.x + rc.w > q.x && rc.y < q.y + q.h && rc.y + rc.h > q.y)) { hit = rc; break; }
         }
-        const want = (pri >= 20) || (front > 0.62 && !sel && !proj) || (!!proj && box === proj && front > 0.4);
+        const want = n.id === hov || (pri >= 20) || (front > 0.62 && !sel && !proj) || (!!proj && box === proj && front > 0.4);
         if (want && !hit && pri >= 20) hit = { x: cands[0][0], y: cands[0][1], w: wd, h: ht };
         const target = hit && want ? 1 : 0;
         if (hit && want) placed.push(hit);
@@ -373,9 +431,17 @@ export function OrbitBody(p: Props) {
         ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 26, y); ctx.moveTo(x + 40, y); ctx.lineTo(x + 92, y);
         ctx.stroke(); ctx.lineWidth = 1; }
 
+      // re-test hover against the new positions
+      if (inside && !dragging) {
+        const n = pickNode(px, py);
+        if ((n?.id ?? null) !== props.current.hoveredId) props.current.onHover(n);
+        cv.style.cursor = n ? "pointer" : "grab";
+      }
+
       raf = requestAnimationFrame(frame);
     }
     raf = requestAnimationFrame(frame);
+    faceRef.current = (n: GraphNode) => faceTo(posOf(n));
 
     return () => {
       cancelAnimationFrame(raf); ro.disconnect();
