@@ -36,7 +36,7 @@ export function bez(t: number): number {
 export const toneFor = (z: number) => mix(FAINT, INK, clamp((z + 1) / 2, 0, 1));
 
 /** The only colour in the app. Used as a flag, never as a fill. */
-export const YELLOW = [214, 178, 32] as const;
+export const YELLOW = [246, 214, 44] as const;
 
 export const SANS = "'ABC Schengen',system-ui,sans-serif";
 // One family throughout. Machine text differs by size and tracking, not typeface.

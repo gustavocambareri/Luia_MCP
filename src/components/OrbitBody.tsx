@@ -107,14 +107,6 @@ export function OrbitBody(p: Props) {
       return orbitPoint(o, angle.get(n.id) ?? 0);
     }
 
-    /** The poster's flag: a small hollow triangle, used only to mark selection. */
-    function flag(x: number, y: number, r: number, up: boolean, alpha: number) {
-      ctx.strokeStyle = rgb(YELLOW, alpha); ctx.lineWidth = 1.3;
-      ctx.beginPath();
-      if (up) { ctx.moveTo(x, y - r); ctx.lineTo(x + r * 0.9, y + r * 0.7); ctx.lineTo(x - r * 0.9, y + r * 0.7); }
-      else { ctx.moveTo(x, y + r); ctx.lineTo(x + r * 0.9, y - r * 0.7); ctx.lineTo(x - r * 0.9, y - r * 0.7); }
-      ctx.closePath(); ctx.stroke(); ctx.lineWidth = 1;
-    }
 
     function project(pt: [number, number, number]) {
       const cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
@@ -242,10 +234,13 @@ export function OrbitBody(p: Props) {
       ctx.beginPath(); ctx.arc(C.x, C.y, R, 0, Math.PI * 2 * e0); ctx.stroke(); ctx.lineWidth = 1;
       for (let i = 0; i < 8; i++) {
         const a = i * Math.PI / 4, big = i % 2 === 0;
-        ctx.strokeStyle = rgb(INK, 0.9 * e0); ctx.lineWidth = big ? 2 : 1;
+        // the four cardinal ticks are the instrument's reference marks, and the
+        // only place colour appears at rest
+        ctx.strokeStyle = big ? rgb(YELLOW, 0.95 * e0) : rgb(INK, 0.9 * e0);
+        ctx.lineWidth = big ? 3 : 1;
         ctx.beginPath();
-        ctx.moveTo(C.x + Math.cos(a) * (R - (big ? 9 : 5)), C.y + Math.sin(a) * (R - (big ? 9 : 5)));
-        ctx.lineTo(C.x + Math.cos(a) * (R + (big ? 9 : 5)), C.y + Math.sin(a) * (R + (big ? 9 : 5)));
+        ctx.moveTo(C.x + Math.cos(a) * (R - (big ? 10 : 5)), C.y + Math.sin(a) * (R - (big ? 10 : 5)));
+        ctx.lineTo(C.x + Math.cos(a) * (R + (big ? 10 : 5)), C.y + Math.sin(a) * (R + (big ? 10 : 5)));
         ctx.stroke();
       }
       ctx.lineWidth = 1;
@@ -425,14 +420,6 @@ export function OrbitBody(p: Props) {
             ctx.beginPath(); ctx.arc(s.sx, s.sy, r + 5 + 6 * bez(s.open), 0, 7); ctx.stroke();
           }
           ctx.restore();
-          // the open document carries the one flash of colour in the app
-          if (n.id === sel) {
-            const o = bez(s.open), rr = r + 5 + 6 * o;
-            ctx.save(); ctx.globalAlpha = al;
-            flag(s.sx, s.sy - rr - 5, 4, false, o);
-            flag(s.sx, s.sy + rr + 5, 4, true, o);
-            ctx.restore();
-          }
         }
         // label
         const lab = n.name.replace(/^[^—]+—\s*/, "").trim().toUpperCase();
@@ -464,11 +451,24 @@ export function OrbitBody(p: Props) {
         }
       });
 
+      // corner ornaments: a small yellow square inside each frame corner,
+      // the instrument's registration marks
+      { const m = 26, sq = 4;
+        ctx.fillStyle = rgb(YELLOW, 0.9);
+        [[m, m], [W - m, m], [m, H - m], [W - m, H - m]].forEach(([cx2, cy2]) => {
+          ctx.fillRect(cx2 - sq / 2, cy2 - sq / 2, sq, sq);
+        }); }
+
       // scale bar
       { const x = 30, y = H - 42;
-        ctx.strokeStyle = rgb(INK, 0.85); ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 26, y); ctx.moveTo(x + 40, y); ctx.lineTo(x + 92, y);
-        ctx.stroke(); ctx.lineWidth = 1; }
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = rgb(INK, 0.85);
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 26, y); ctx.stroke();
+        ctx.strokeStyle = rgb(YELLOW, 0.95);
+        ctx.beginPath(); ctx.moveTo(x + 40, y); ctx.lineTo(x + 66, y); ctx.stroke();
+        ctx.strokeStyle = rgb(INK, 0.85);
+        ctx.beginPath(); ctx.moveTo(x + 66, y); ctx.lineTo(x + 92, y); ctx.stroke();
+        ctx.lineWidth = 1; }
 
       // re-test hover against the new positions
       if (inside && !dragging) {

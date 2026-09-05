@@ -14,7 +14,7 @@
   --paper: #D6D6D4;
   --ink: #161616;
   --faint: #8C8C8A;
-  --accent: #D6B220;
+  --accent: #F6D62C;
   --line: rgba(22,22,22,.16);
   --line-2: rgba(22,22,22,.3);
   --hover: rgba(22,22,22,.05);
@@ -98,8 +98,8 @@ body {
 .row .t { font-size: 13px; font-weight: 400; letter-spacing: .01em; line-height: 1.35; text-transform: none; }
 .row .a { font-family: var(--mono); font-size: 8px; letter-spacing: .1em; opacity: .38; white-space: nowrap; }
 .row:hover { background: var(--hover); border-left-color: var(--line-2); }
-.row.cursor { background: var(--hover); border-left-color: var(--accent); }
-.row.sel { background: rgba(22,22,22,.07); border-left-color: var(--accent); }
+.row.cursor { background: var(--hover); border-left-color: var(--accent); border-left-width: 3px; padding-left: 19px; }
+.row.sel { background: rgba(22,22,22,.07); border-left-color: var(--accent); border-left-width: 3px; padding-left: 19px; }
 .row.sel .t { font-weight: 600; }
 .row.nb .t { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--line-2); }
 .row.dim { opacity: .32; }
