@@ -83,8 +83,8 @@ export function OrbitBody(p: Props) {
     // Animated values, eased toward their targets every frame.
     const st = new Map<string, { open: number; dim: number; hov: number; filt: number; sx: number; sy: number; z: number; lab: number }>();
     props.current.nodes.forEach(n => st.set(n.id, { open: 0, dim: 0, hov: 0, filt: 0, sx: 0, sy: 0, z: 0, lab: 0 }));
-    const pst = new Map<string, { wake: number; sx: number; sy: number; z: number }>();
-    props.current.projects.forEach(pr => pst.set(pr.id, { wake: 0, sx: 0, sy: 0, z: 0 }));
+    const pst = new Map<string, { wake: number; sx: number; sy: number; z: number; lab: number }>();
+    props.current.projects.forEach(pr => pst.set(pr.id, { wake: 0, sx: 0, sy: 0, z: 0, lab: 0 }));
     const est = new Map<string, number>();
 
     let yaw = 0.4, pitch = 0.28, yawT: number | null = null, yawV = 0, pitchV = 0;
@@ -326,8 +326,16 @@ export function OrbitBody(p: Props) {
         }
       }
 
-      // project anchors
-      const placed: { x: number; y: number; w: number; h: number }[] = [];
+      // Every label on the body goes through one pass at the end of the frame,
+      // ranked by how much attention it deserves right now. Nothing draws its
+      // own label inline.
+      type LabelReq = { key: string; kind: "doc" | "project"; x: number; y: number; gap: number;
+        l1: string; l2: string; front: number; col: readonly number[]; emph: number; rank: number; base: number;
+        state: { lab: number } };
+      const labelReqs: LabelReq[] = [];
+      const selNode = sel ? P.nodes.find(n => n.id === sel) ?? null : null;
+      const selBox = selNode ? (selNode.project ?? "team") : null;
+      const selPos = selNode ? st.get(selNode.id)! : null;
       P.projects.forEach((pr, i) => {
         if (pr.id === "team") return;
         const e = enter(0.5 + i * 0.22 + 0.4); if (e < 0.01) return;
@@ -353,16 +361,14 @@ export function OrbitBody(p: Props) {
           ctx.stroke();
         }
         ctx.restore();
-        if (front > 0.34) {
-          const ly = P2.y - rad - 11;
-          ctx.save(); ctx.globalAlpha = al * (0.5 + 0.5 * front);
-          ctx.fillStyle = rgb(mix(col, INK, s.wake));
-          ctx.font = `600 11px ${SANS}`; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
-          ctx.letterSpacing = "0.14em";
-          ctx.fillText(pr.label, P2.x, ly); ctx.letterSpacing = "0px";
-          ctx.restore();
-          placed.push({ x: P2.x - 40, y: ly - 14, w: 80, h: 30 });
-        }
+        // rank: the selected document's own project sits just under the
+        // selection; an explicitly chosen project leads; otherwise by depth
+        let rank: number, base: number;
+        if (sel) { const own = selBox === pr.id; rank = own ? 800 : 300 + front * 50; base = own ? 0.8 : 0.2; }
+        else if (proj) { const own = proj === pr.id; rank = own ? 900 : 300 + front * 50; base = own ? 1 : 0.28; }
+        else { rank = 500 + front * 100; base = 0.9 * (0.5 + 0.5 * front); }
+        if (front > 0.2) labelReqs.push({ key: "p:" + pr.id, kind: "project", x: P2.x, y: P2.y, gap: rad + 4,
+          l1: pr.label, l2: "", front, col, emph: s.wake, rank, base: base * e, state: s });
       });
 
       // documents, back to front, with labels that never overlap
@@ -410,51 +416,91 @@ export function OrbitBody(p: Props) {
           }
           ctx.restore();
         }
-        // label
+        // label request
         const lab = n.name.replace(/^[^—]+—\s*/, "").trim().toUpperCase();
         const words = lab.split(" ");
         let l1 = lab, l2 = "";
         if (words.length > 2) { const mid = Math.ceil(words.length / 2); l1 = words.slice(0, mid).join(" "); l2 = words.slice(mid).join(" "); }
-        ctx.font = `7.5px ${MONO}`;
-        const wd = Math.max(ctx.measureText(l1).width, ctx.measureText(l2).width) + 6;
-        const ht = l2 ? 24 : 13;
-        const pri = (n.id === sel ? 3 : s.open > 0.3 ? 2 : n.id === hov ? 2 : 0) * 10 + front;
-        const cands = [[s.sx - wd / 2, s.sy - 9 - ht], [s.sx - wd / 2, s.sy + 8], [s.sx + 8, s.sy - ht / 2], [s.sx - 8 - wd, s.sy - ht / 2]];
+        const isSel = n.id === sel, isHov = n.id === hov, isNb = !!sel && P.neighbourIds.has(n.id);
+        let rank: number, base: number;
+        if (sel) {
+          if (isSel) { rank = 1000; base = 1; }
+          else if (isHov) { rank = 900; base = 0.9; }
+          else if (isNb) { rank = 600 + front * 50; base = 0.62 * (0.55 + 0.45 * front); }
+          else { rank = 0; base = 0; }
+        } else if (proj) {
+          if (isHov) { rank = 900; base = 0.95; }
+          else if (box === proj) { rank = 700 + front * 50; base = 0.85 * (0.5 + 0.5 * front); }
+          else { rank = 0; base = 0; }
+        } else {
+          if (isHov) { rank = 900; base = 1; }
+          else { rank = front * 100; base = clamp((front - 0.45) / 0.4, 0, 1); }
+        }
+        if (base > 0) labelReqs.push({ key: "d:" + n.id, kind: "doc", x: s.sx, y: s.sy, gap: (n.id === "_team/convictions" ? 16 : 9),
+          l1, l2, front, col, emph: s.open, rank, base: base * al, state: s });
+      });
 
-        // Labels are placed nearest-first. A label that cannot find a clear slot
-        // is not dropped: it takes its first choice and fades in proportion to
-        // how much it overlaps what is already there, so a crowded cluster stays
-        // legible at its front edge instead of losing labels outright.
-        let hit: { x: number; y: number; w: number; h: number } | null = null;
-        let clash = 0;
+      // ---- the label pass ----
+      // Highest rank places first and owns its space. Every later label picks
+      // the slot that collides least with what is already there, then fades by
+      // how much it still overlaps. With a selection, a focus zone around the
+      // selected document pushes every other label away so the one you chose
+      // has air around it. Labels that lose their turn ease out; they never pop.
+      labelReqs.sort((a, b) => b.rank - a.rank);
+      const placed: { x: number; y: number; w: number; h: number; a: number }[] = [];
+      // the marks themselves are obstacles: a label must not sit on an anchor,
+      // the hub, or the open document's ring
+      P.projects.forEach(pr => { if (pr.id === "team") return; const s = pst.get(pr.id)!;
+        const r = 12 + 5 * s.wake; placed.push({ x: s.sx - r, y: s.sy - r, w: r * 2, h: r * 2, a: 1 }); });
+      { const r = 26; placed.push({ x: C.x - r, y: C.y - r, w: r * 2, h: r * 2, a: 1 }); }
+      if (selPos) { const r = 16; placed.push({ x: selPos.sx - r, y: selPos.sy - r, w: r * 2, h: r * 2, a: 1 }); }
+      const seen = new Set<string>();
+      for (const L of labelReqs) {
+        seen.add(L.key);
+        const isDoc = L.kind === "doc";
+        ctx.font = isDoc ? `7.5px ${MONO}` : `600 11px ${SANS}`;
+        ctx.letterSpacing = isDoc ? "0.08em" : "0.14em";
+        const wd = Math.max(ctx.measureText(L.l1).width, ctx.measureText(L.l2).width) + 6;
+        const ht = L.l2 ? 24 : (isDoc ? 13 : 15);
+        const g = L.gap;
+        const cands = isDoc
+          ? [[L.x - wd / 2, L.y - g - ht], [L.x - wd / 2, L.y + g], [L.x + g, L.y - ht / 2], [L.x - g - wd, L.y - ht / 2]]
+          : [[L.x - wd / 2, L.y - g - ht - 4], [L.x - wd / 2, L.y + g + 4], [L.x + g + 4, L.y - ht / 2], [L.x - g - 4 - wd, L.y - ht / 2]];
+        let hit = { x: cands[0][0], y: cands[0][1], w: wd, h: ht }, clash = Infinity;
         for (const c of cands) {
           const rc = { x: c[0], y: c[1], w: wd, h: ht };
           let worst = 0;
           for (const q of placed) {
             const ox = Math.min(rc.x + rc.w, q.x + q.w) - Math.max(rc.x, q.x);
             const oy = Math.min(rc.y + rc.h, q.y + q.h) - Math.max(rc.y, q.y);
-            if (ox > 0 && oy > 0) worst = Math.max(worst, (ox * oy) / (rc.w * rc.h));
+            if (ox > 0 && oy > 0) worst = Math.max(worst, (ox * oy) / (rc.w * rc.h) * q.a);
           }
-          if (worst === 0) { hit = rc; clash = 0; break; }
-          if (!hit || worst < clash) { hit = rc; clash = worst; }
+          if (worst < clash) { hit = rc; clash = worst; }
+          if (worst === 0) break;
         }
-
-        const want = n.id === hov || (pri >= 20) || (front > 0.62 && !sel && !proj) || (!!proj && box === proj && front > 0.4);
-        // the selected or hovered label always wins its space outright
-        const owns = pri >= 20;
-        const fade = owns ? 1 : clamp(1 - clash * 1.5, 0.12, 1);
-        const target = hit && want ? fade : 0;
-        if (hit && want && (owns || clash < 0.55)) placed.push(hit);
-        s.lab += (target - s.lab) * (1 - Math.exp(-dt * 5));
-        if (hit && s.lab > 0.02) {
-          ctx.save(); ctx.globalAlpha = s.lab * al * (0.4 + 0.6 * front);
-          ctx.fillStyle = rgb(mix(col, INK, s.open));
-          ctx.textAlign = "center"; ctx.textBaseline = "top"; ctx.letterSpacing = "0.08em";
-          ctx.fillText(l1, hit.x + wd / 2, hit.y);
-          if (l2) ctx.fillText(l2, hit.x + wd / 2, hit.y + 11);
-          ctx.letterSpacing = "0px"; ctx.restore();
+        let alpha = L.base * clamp(1 - clash * 1.7, 0, 1);
+        // focus zone: everything but the selection itself yields to it
+        if (selPos && L.key !== "d:" + sel) {
+          const d = Math.hypot(hit.x + wd / 2 - selPos.sx, hit.y + ht / 2 - selPos.sy);
+          const near = clamp((d - 30) / 70, 0, 1);            // 0 inside 30px, 1 beyond 100px
+          const soft = near * near * (3 - 2 * near);
+          alpha *= L.rank >= 600 ? 0.25 + 0.75 * soft : soft;  // neighbours keep a little presence
         }
-      });
+        if (alpha > 0.12) placed.push({ ...hit, a: alpha });
+        const st_ = L.state; st_.lab += (alpha - st_.lab) * (1 - Math.exp(-dt * 6));
+        if (st_.lab > 0.02) {
+          ctx.save(); ctx.globalAlpha = st_.lab;
+          ctx.fillStyle = rgb(mix(L.col, INK, L.emph));
+          ctx.textAlign = "center"; ctx.textBaseline = "top";
+          ctx.fillText(L.l1, hit.x + wd / 2, hit.y);
+          if (L.l2) ctx.fillText(L.l2, hit.x + wd / 2, hit.y + 11);
+          ctx.restore();
+        }
+      }
+      ctx.letterSpacing = "0px";
+      // labels that got no request this frame ease out rather than vanish
+      P.nodes.forEach(n => { if (!seen.has("d:" + n.id)) { const s = st.get(n.id)!; s.lab += (0 - s.lab) * (1 - Math.exp(-dt * 6)); } });
+      P.projects.forEach(pr => { if (!seen.has("p:" + pr.id)) { const s = pst.get(pr.id)!; s.lab += (0 - s.lab) * (1 - Math.exp(-dt * 6)); } });
 
       // corner ornaments: a small yellow square inside each frame corner,
       // the instrument's registration marks
