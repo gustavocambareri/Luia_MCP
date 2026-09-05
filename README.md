@@ -27,8 +27,8 @@ that folder in git.
 Requires [Node.js](https://nodejs.org) 20.19+ or 22.12+.
 
 ```bash
-git clone https://github.com/gustavocambareri/luia.git
-cd luia
+git clone https://github.com/gustavocambareri/Luia_MCP.git
+cd Luia_MCP
 npm install
 ```
 

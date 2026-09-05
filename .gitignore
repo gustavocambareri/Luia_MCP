@@ -1,27 +1,29 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
+!.vscode/extensions.json
+# Editor directories and files
+# Local knowledge store (each team keeps their own; share via a separate repo)
+# Logs
+*.local
+*.log
+*.njsproj
+*.ntvs*
+*.sln
+*.suo
+*.sw?
+.DS_Store
+.gstack/
+.idea
+.superpowers/
+.vscode/*
+/knowledge
 dist
 dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Local knowledge store (each team keeps their own; share via a separate repo)
-/knowledge
+lerna-debug.log*
+logs
+node_modules
+npm-debug.log*
+pnpm-debug.log*
+public/*.mov
+public/glyphs/
+yarn-debug.log*
+yarn-error.log*
