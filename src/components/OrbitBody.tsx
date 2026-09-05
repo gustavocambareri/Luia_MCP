@@ -36,8 +36,6 @@ function orbitPoint(o: Orbit, ang: number): [number, number, number] {
  */
 export function OrbitBody(p: Props) {
   const cvRef = useRef<HTMLCanvasElement>(null);
-  const readoutRef = useRef<HTMLDivElement>(null);
-  const statusRef = useRef<HTMLDivElement>(null);
   const props = useRef(p); props.current = p;
 
   // Selecting from the list turns the body to that document too, so the two
@@ -244,14 +242,8 @@ export function OrbitBody(p: Props) {
         ctx.stroke();
       }
       ctx.lineWidth = 1;
-      for (let j = -2; j <= 2; j++) {
-        const ph = j * Math.PI / 6, r = Math.cos(ph), y = Math.sin(ph);
-        arc3(u => [Math.cos(u * Math.PI * 2) * r, y, Math.sin(u * Math.PI * 2) * r], 72, 0.16 * e0);
-      }
-      for (let j = 0; j < 6; j++) {
-        const a = j * Math.PI / 6;
-        arc3(u => { const th = u * Math.PI * 2; return [Math.cos(th) * Math.cos(a), Math.sin(th), Math.cos(th) * Math.sin(a)]; }, 72, 0.16 * e0);
-      }
+      // The latitude/longitude wireframe is off: the orbits and the rim carry
+      // the volume on their own, and the mesh was mostly clutter behind them.
       arc3(u => [Math.cos(u * Math.PI * 2), 0, Math.sin(u * Math.PI * 2)], 96, 0.34 * e0);
 
       // orbits
@@ -459,16 +451,6 @@ export function OrbitBody(p: Props) {
           ctx.fillRect(cx2 - sq / 2, cy2 - sq / 2, sq, sq);
         }); }
 
-      // scale bar
-      { const x = 30, y = H - 42;
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = rgb(INK, 0.85);
-        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 26, y); ctx.stroke();
-        ctx.strokeStyle = rgb(YELLOW, 0.95);
-        ctx.beginPath(); ctx.moveTo(x + 40, y); ctx.lineTo(x + 66, y); ctx.stroke();
-        ctx.strokeStyle = rgb(INK, 0.85);
-        ctx.beginPath(); ctx.moveTo(x + 66, y); ctx.lineTo(x + 92, y); ctx.stroke();
-        ctx.lineWidth = 1; }
 
       // re-test hover against the new positions
       if (inside && !dragging) {
@@ -491,26 +473,11 @@ export function OrbitBody(p: Props) {
     };
   }, []);
 
-  const hovered = p.nodes.find(n => n.id === p.hoveredId) ?? null;
-  const selected = p.nodes.find(n => n.id === p.selectedId) ?? null;
-  const labelOf = (id: string) => p.projects.find(x => x.id === id)?.label ?? "TEAM";
 
   return (
     <div className="stage">
       <canvas ref={cvRef} />
       <i className="corner a" /><i className="corner b" /><i className="corner c" /><i className="corner d" />
-      <div className="hud tl">KNOWLEDGE BODY · FIG_001</div>
-      <div className="hud bl">
-        <div className="read" ref={readoutRef}>
-          {hovered ? `${hovered.name} · ${labelOf(hovered.project ?? "team")} · ${hovered.author.toUpperCase()}` : ""}
-        </div>
-        <div ref={statusRef}>
-          {selected
-            ? `${selected.name} · ${p.neighbourIds.size} LINKS`
-            : "DRAG TO TURN · CLICK A DOCUMENT · READ ON THE LEFT"}
-        </div>
-      </div>
-      <div className="hud br">{p.nodes.length} DOC · {p.edges.length} LINKS</div>
     </div>
   );
 }
