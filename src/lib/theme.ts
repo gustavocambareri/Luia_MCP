@@ -35,6 +35,19 @@ export function bez(t: number): number {
 // Depth to tone: z runs -1 (back) to 1 (front).
 export const toneFor = (z: number) => mix(FAINT, INK, clamp((z + 1) / 2, 0, 1));
 
+/**
+ * The line ladder. Every stroke on the body sits on one of these steps, so the
+ * drawing has a fixed number of values rather than a continuous smear of greys.
+ * Depth then modulates within a step, never across one.
+ */
+export const LINE = {
+  rim: 0.88,        // the outer circle: the strongest line on the plate
+  equator: 0.30,    // the horizon
+  orbitIdle: 0.17,  // a project's path at rest
+  orbitWake: 0.62,  // the same path when its project is live
+  chord: 0.12,      // a connection at rest
+} as const;
+
 /** The only colour in the app. Used as a flag, never as a fill. */
 export const YELLOW = [246, 214, 44] as const;
 

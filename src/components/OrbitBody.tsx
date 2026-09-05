@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { GraphNode, GraphEdge } from "../lib/types";
-import { CHALK, INK, PAPER, YELLOW, bez, clamp, mix, rgb, toneFor, MONO, SANS } from "../lib/theme";
+import { CHALK, INK, LINE, PAPER, YELLOW, bez, clamp, mix, rgb, toneFor, MONO, SANS } from "../lib/theme";
 
 interface Props {
   nodes: GraphNode[];
@@ -114,14 +114,15 @@ export function OrbitBody(p: Props) {
       return { x: W / 2 + x * R * k, y: H / 2 + 8 - y2 * R * k, z: z2 };
     }
 
-    function arc3(fn: (t: number) => [number, number, number], steps: number, alpha: number, lw = 1) {
+    function arc3(fn: (t: number) => [number, number, number], steps: number, alpha: number, lw = 1, tint?: readonly number[], tintAmt = 0) {
       ctx.lineWidth = lw;
       let prev: { x: number; y: number; z: number } | null = null;
       for (let i = 0; i <= steps; i++) {
         const P = project(fn(i / steps));
         if (prev) {
           const z = (P.z + prev.z) / 2;
-          ctx.strokeStyle = rgb(toneFor(z), alpha * (0.45 + 0.55 * clamp((z + 1) / 2, 0, 1)));
+          const base = tint ? mix(toneFor(z), tint, tintAmt) : toneFor(z);
+          ctx.strokeStyle = rgb(base, alpha * (0.45 + 0.55 * clamp((z + 1) / 2, 0, 1)));
           ctx.beginPath(); ctx.moveTo(prev.x, prev.y); ctx.lineTo(P.x, P.y); ctx.stroke();
         }
         prev = P;
@@ -228,7 +229,7 @@ export function OrbitBody(p: Props) {
 
       // sphere: rim, ticks, wireframe
       const C = project([0, 0, 0]); const R = Math.min(W, H) * 0.40;
-      ctx.strokeStyle = rgb(INK, 0.85 * e0); ctx.lineWidth = 1.2;
+      ctx.strokeStyle = rgb(INK, LINE.rim * e0); ctx.lineWidth = 1.2;
       ctx.beginPath(); ctx.arc(C.x, C.y, R, 0, Math.PI * 2 * e0); ctx.stroke(); ctx.lineWidth = 1;
       for (let i = 0; i < 8; i++) {
         const a = i * Math.PI / 4, big = i % 2 === 0;
@@ -244,14 +245,17 @@ export function OrbitBody(p: Props) {
       ctx.lineWidth = 1;
       // The latitude/longitude wireframe is off: the orbits and the rim carry
       // the volume on their own, and the mesh was mostly clutter behind them.
-      arc3(u => [Math.cos(u * Math.PI * 2), 0, Math.sin(u * Math.PI * 2)], 96, 0.34 * e0);
+      arc3(u => [Math.cos(u * Math.PI * 2), 0, Math.sin(u * Math.PI * 2)], 96, LINE.equator * e0);
 
       // orbits
       P.projects.forEach((pr, i) => {
         const o = orbits.get(pr.id)!;
         const e = enter(0.5 + i * 0.22); if (e < 0.01) return;
         const w = pst.get(pr.id)!.wake;
-        arc3(u => orbitPoint(o, u * Math.PI * 2 * e + o.phase), 120, (0.30 + 0.40 * w), 1 + 0.5 * w);
+        // an orbit steps from idle to wake on the ladder, and takes the accent
+        // as it goes, so the live project's path is the yellow one
+        const a = LINE.orbitIdle + (LINE.orbitWake - LINE.orbitIdle) * w;
+        arc3(u => orbitPoint(o, u * Math.PI * 2 * e + o.phase), 120, a, 1 + 0.8 * w, YELLOW, w * 0.9);
       });
 
       // positions
@@ -285,7 +289,7 @@ export function OrbitBody(p: Props) {
         ctx.lineCap = "round";
         if (live < 0.02) {
           ctx.setLineDash([1, 5]); ctx.lineWidth = 0.8;
-          ctx.strokeStyle = rgb(toneFor(z), (0.14 - 0.10 * dim) * vis * depth);
+          ctx.strokeStyle = rgb(toneFor(z), (LINE.chord - 0.09 * dim) * vis * depth);
           let x2 = B.sx, y2 = B.sy;
           if (eL < 1) { x2 = A.sx + (B.sx - A.sx) * eL; y2 = A.sy + (B.sy - A.sy) * eL; }
           ctx.beginPath(); ctx.moveTo(A.sx, A.sy); ctx.lineTo(x2, y2); ctx.stroke();
@@ -350,9 +354,14 @@ export function OrbitBody(p: Props) {
         const al = (1 - dimP) * e * (0.45 + 0.55 * front);
         const rad = (7 + 2.5 * s.wake) * (0.65 + 0.35 * front) * e;
         ctx.save(); ctx.globalAlpha = al;
-        ctx.strokeStyle = rgb(col); ctx.fillStyle = rgb(col); ctx.lineWidth = 1 + 0.8 * s.wake;
+        // the project ring carries the accent: yellow at rest, fuller when live
+        const ringCol = mix(col, YELLOW, 0.55 + 0.45 * s.wake);
+        ctx.strokeStyle = rgb(ringCol); ctx.lineWidth = 1.4 + 1.2 * s.wake;
         ctx.beginPath(); ctx.arc(P2.x, P2.y, rad, 0, 7); ctx.stroke();
+        ctx.lineWidth = 1;
+        ctx.fillStyle = rgb(col);
         ctx.beginPath(); ctx.arc(P2.x, P2.y, rad * 0.3, 0, 7); ctx.fill();
+        ctx.strokeStyle = rgb(col);
         for (let q = 0; q < 4; q++) {
           const a2 = q * Math.PI / 2 + Math.PI / 4;
           ctx.beginPath();
