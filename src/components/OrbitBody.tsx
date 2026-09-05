@@ -360,9 +360,6 @@ export function OrbitBody(p: Props) {
           ctx.font = `600 11px ${SANS}`; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
           ctx.letterSpacing = "0.14em";
           ctx.fillText(pr.label, P2.x, ly); ctx.letterSpacing = "0px";
-          ctx.font = `8px ${MONO}`; ctx.globalAlpha = al * 0.55; ctx.textBaseline = "top";
-          const count = P.nodes.filter(n => (n.project ?? "team") === pr.id).length;
-          ctx.fillText(`${String(count).padStart(2, "0")} DOC`, P2.x, ly + 3);
           ctx.restore();
           placed.push({ x: P2.x - 40, y: ly - 14, w: 80, h: 30 });
         }
@@ -423,15 +420,31 @@ export function OrbitBody(p: Props) {
         const ht = l2 ? 24 : 13;
         const pri = (n.id === sel ? 3 : s.open > 0.3 ? 2 : n.id === hov ? 2 : 0) * 10 + front;
         const cands = [[s.sx - wd / 2, s.sy - 9 - ht], [s.sx - wd / 2, s.sy + 8], [s.sx + 8, s.sy - ht / 2], [s.sx - 8 - wd, s.sy - ht / 2]];
+
+        // Labels are placed nearest-first. A label that cannot find a clear slot
+        // is not dropped: it takes its first choice and fades in proportion to
+        // how much it overlaps what is already there, so a crowded cluster stays
+        // legible at its front edge instead of losing labels outright.
         let hit: { x: number; y: number; w: number; h: number } | null = null;
+        let clash = 0;
         for (const c of cands) {
           const rc = { x: c[0], y: c[1], w: wd, h: ht };
-          if (!placed.some(q => rc.x < q.x + q.w && rc.x + rc.w > q.x && rc.y < q.y + q.h && rc.y + rc.h > q.y)) { hit = rc; break; }
+          let worst = 0;
+          for (const q of placed) {
+            const ox = Math.min(rc.x + rc.w, q.x + q.w) - Math.max(rc.x, q.x);
+            const oy = Math.min(rc.y + rc.h, q.y + q.h) - Math.max(rc.y, q.y);
+            if (ox > 0 && oy > 0) worst = Math.max(worst, (ox * oy) / (rc.w * rc.h));
+          }
+          if (worst === 0) { hit = rc; clash = 0; break; }
+          if (!hit || worst < clash) { hit = rc; clash = worst; }
         }
+
         const want = n.id === hov || (pri >= 20) || (front > 0.62 && !sel && !proj) || (!!proj && box === proj && front > 0.4);
-        if (want && !hit && pri >= 20) hit = { x: cands[0][0], y: cands[0][1], w: wd, h: ht };
-        const target = hit && want ? 1 : 0;
-        if (hit && want) placed.push(hit);
+        // the selected or hovered label always wins its space outright
+        const owns = pri >= 20;
+        const fade = owns ? 1 : clamp(1 - clash * 1.5, 0.12, 1);
+        const target = hit && want ? fade : 0;
+        if (hit && want && (owns || clash < 0.55)) placed.push(hit);
         s.lab += (target - s.lab) * (1 - Math.exp(-dt * 5));
         if (hit && s.lab > 0.02) {
           ctx.save(); ctx.globalAlpha = s.lab * al * (0.4 + 0.6 * front);
